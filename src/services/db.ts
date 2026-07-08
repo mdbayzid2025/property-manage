@@ -176,6 +176,9 @@ export interface AccountTransaction {
   account: string; // e.g. "Cashbook", "Bank Account", "Bkash Merchant"
   amount: number;
   description: string;
+  propertyId?: string;
+  invoiceNo?: string;
+  note?: string;
 }
 
 // Global Demo Data Seeds

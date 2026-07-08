@@ -140,9 +140,9 @@ export default function App() {
       <aside className={`no-print fixed inset-y-0 left-0 z-40 transition-all duration-300 ${
         sidebarCollapsed ? 'w-20' : 'w-64'
       } glass-panel border-r border-slate-200 dark:border-blue-900/30 bg-sidebar-bg flex flex-col justify-between hidden md:flex`}>
-        <div>
+        <div className="flex flex-col h-full overflow-hidden w-full">
           {/* Logo & Slogan */}
-          <div className="p-6 border-b border-slate-200 dark:border-blue-950/40 flex justify-between items-center">
+          <div className="p-6 border-b border-slate-200 dark:border-blue-950/40 flex justify-between items-center shrink-0">
             {!sidebarCollapsed ? (
               <div>
                 <h1 className="text-sm font-extrabold tracking-wider bg-gradient-to-r from-sky-400 to-purple-400 bg-clip-text text-transparent uppercase m-0 leading-none">
@@ -155,8 +155,8 @@ export default function App() {
             )}
           </div>
 
-          {/* Menus List */}
-          <nav className="p-4 space-y-1">
+          {/* Menus List - Scrollable */}
+          <nav className="p-4 space-y-1 flex-1 overflow-y-auto custom-scrollbar">
             {getSidebarMenus().map((item) => {
               const IconComponent = item.icon;
               const isActive = activeTab === item.id;
@@ -176,20 +176,20 @@ export default function App() {
               );
             })}
           </nav>
-        </div>
 
-        {/* Brand Copyright Info */}
-        {!sidebarCollapsed && (
-          <div className="p-6 border-t border-slate-200 dark:border-blue-950/40 text-[10px] text-slate-500 font-medium">
-            <p>{t('footerMadeBy')}</p>
-            <p className="mt-1">
-              <a href="https://www.softwarepointbd.com/" target="_blank" rel="noopener noreferrer" className="hover:underline text-sky-400">
-                www.softwarepointbd.com
-              </a>
-            </p>
-            <p className="mt-1">{t('hotline')}</p>
-          </div>
-        )}
+          {/* Brand Copyright Info */}
+          {!sidebarCollapsed && (
+            <div className="p-6 border-t border-slate-200 dark:border-blue-950/40 text-[10px] text-slate-500 font-medium shrink-0">
+              <p>{t('footerMadeBy')}</p>
+              <p className="mt-1">
+                <a href="https://www.softwarepointbd.com/" target="_blank" rel="noopener noreferrer" className="hover:underline text-sky-400">
+                  www.softwarepointbd.com
+                </a>
+              </p>
+              <p className="mt-1">{t('hotline')}</p>
+            </div>
+          )}
+        </div>
       </aside>
 
       {/* Main Content Area */}
