@@ -18,15 +18,15 @@ import TenantPortal from './components/TenantPortal';
 import AIChatSidebar from './components/AIChatSidebar';
 
 // Icons
-import { 
-  Menu, X, Sun, Moon, Globe, Bell, Bot, ChevronRight, 
-  Home, Users, FileText, Zap, Wrench, ShieldCheck, 
-  BadgeDollarSign, BookOpen, Briefcase, FileSpreadsheet, Brain, Shield, User 
+import {
+  Menu, X, Sun, Moon, Globe, Bell, Bot, ChevronRight,
+  Home, Users, FileText, Zap, Wrench, ShieldCheck,
+  BadgeDollarSign, BookOpen, Briefcase, FileSpreadsheet, Brain, Shield, User
 } from 'lucide-react';
 
 export default function App() {
   const { t, lang, toggleLanguage } = useTranslation();
-  
+
   // App States
   const [activeTab, setActiveTab] = useState<string>('dashboard');
   const [activeRole, setActiveRole] = useState<string>('owner'); // owner, admin, manager, accountant, collector, tenant
@@ -71,15 +71,14 @@ export default function App() {
 
     const items = [
       { id: 'dashboard', label: t('dashboard'), icon: Home },
-      { id: 'propertyMgmt', label: t('propertyMgmt'), icon: Home },
-      { id: 'unitMgmt', label: t('unitMgmt'), icon: Home },
-      { id: 'tenantMgmt', label: t('tenantMgmt'), icon: Users },
+      { id: 'reports', label: t('reports'), icon: FileSpreadsheet },
+      { id: 'accountingSystem', label: t('accountingSystem'), icon: BookOpen },
       { id: 'rentMgmt', label: t('rentMgmt'), icon: FileText },
+      { id: 'propertyMgmt', label: t('propertyMgmt'), icon: Home },
+      { id: 'employeeMgmt', label: t('employeeMgmt'), icon: Briefcase },
+      { id: 'tenantMgmt', label: t('tenantMgmt'), icon: Users },
       { id: 'utilityMgmt', label: t('utilityMgmt'), icon: Zap },
       { id: 'maintenanceMgmt', label: t('maintenanceMgmt'), icon: Wrench },
-      { id: 'accountingSystem', label: t('accountingSystem'), icon: BookOpen },
-      { id: 'employeeMgmt', label: t('employeeMgmt'), icon: Briefcase },
-      { id: 'reports', label: t('reports'), icon: FileSpreadsheet }
     ];
 
     // Filter menus based on role
@@ -124,11 +123,10 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-gradient-mesh flex text-slate-800 dark:text-slate-100 selection:bg-sky-500/30 selection:text-sky-300">
-      
+
       {/* Sidebar Panel */}
-      <aside className={`no-print fixed inset-y-0 left-0 z-40 transition-all duration-300 ${
-        sidebarCollapsed ? 'w-20' : 'w-64'
-      } glass-panel border-r border-slate-200 dark:border-blue-900/30 bg-sidebar-bg flex flex-col justify-between hidden md:flex`}>
+      <aside className={`no-print fixed inset-y-0 left-0 z-40 transition-all duration-300 ${sidebarCollapsed ? 'w-20' : 'w-64'
+        } glass-panel border-r border-slate-200 dark:border-blue-900/30 bg-sidebar-bg flex flex-col justify-between hidden md:flex`}>
         <div className="flex flex-col h-full overflow-hidden w-full">
           {/* Logo & Slogan */}
           <div className="p-6 border-b border-slate-200 dark:border-blue-950/40 flex justify-between items-center shrink-0">
@@ -153,11 +151,10 @@ export default function App() {
                 <button
                   key={item.id}
                   onClick={() => setActiveTab(item.id)}
-                  className={`w-full flex items-center p-3 rounded-xl text-xs font-semibold tracking-wide transition-all ${
-                    isActive 
-                      ? 'bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-lg shadow-indigo-600/15' 
-                      : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-blue-950/20 hover:text-slate-800 dark:hover:text-slate-200'
-                  }`}
+                  className={`w-full flex items-center p-3 rounded-xl text-xs font-semibold tracking-wide transition-all ${isActive
+                    ? 'bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-lg shadow-indigo-600/15'
+                    : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-blue-950/20 hover:text-slate-800 dark:hover:text-slate-200'
+                    }`}
                 >
                   <IconComponent className="w-5 h-5 mr-3 shrink-0" />
                   {!sidebarCollapsed && <span>{item.label}</span>}
@@ -182,14 +179,13 @@ export default function App() {
       </aside>
 
       {/* Main Content Area */}
-      <div className={`flex-1 flex flex-col min-w-0 transition-all duration-300 ${
-        sidebarCollapsed ? 'md:pl-20' : 'md:pl-64'
-      } pb-16 md:pb-0`}>
-        
+      <div className={`flex-1 flex flex-col min-w-0 transition-all duration-300 ${sidebarCollapsed ? 'md:pl-20' : 'md:pl-64'
+        } pb-16 md:pb-0`}>
+
         {/* Sticky Header Navbar */}
         <header className="no-print sticky top-0 z-30 glass-panel border-b border-slate-200 dark:border-blue-900/30 bg-sidebar-bg flex items-center justify-between px-6 py-4">
           <div className="flex items-center gap-4">
-            <button 
+            <button
               onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
               className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg hidden md:block text-slate-400"
             >
@@ -202,7 +198,7 @@ export default function App() {
 
           <div className="flex items-center gap-3">
             {/* AI Assistant Float Button */}
-            <button 
+            <button
               onClick={() => setChatOpen(!chatOpen)}
               className="p-2 bg-sky-500/10 hover:bg-sky-500/20 text-sky-400 rounded-xl transition-all flex items-center gap-1.5 border border-sky-500/20"
             >
@@ -211,7 +207,7 @@ export default function App() {
             </button>
 
             {/* Language Switcher */}
-            <button 
+            <button
               onClick={toggleLanguage}
               className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl text-slate-400 flex items-center gap-1 transition-all"
             >
@@ -221,7 +217,7 @@ export default function App() {
 
             {/* Notifications Dropdown */}
             <div className="relative">
-              <button 
+              <button
                 onClick={() => setShowNotifications(!showNotifications)}
                 className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 rounded-xl transition-all relative"
               >
@@ -289,9 +285,8 @@ export default function App() {
               <button
                 key={item.id}
                 onClick={() => setActiveTab(item.id)}
-                className={`flex flex-col items-center justify-center p-2 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-all ${
-                  isActive ? 'text-sky-600 dark:text-sky-400 font-bold' : ''
-                }`}
+                className={`flex flex-col items-center justify-center p-2 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-all ${isActive ? 'text-sky-600 dark:text-sky-400 font-bold' : ''
+                  }`}
               >
                 <IconComponent className="w-5 h-5" />
                 <span className="text-[9px] mt-1">{item.label.split(' ')[0]}</span>

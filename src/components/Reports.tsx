@@ -739,32 +739,32 @@ export default function Reports({ companyId }: { companyId: string }) {
                   )}
                   {/* Ledger Summary / Grand Totals Row */}
                   {filteredIncome.length > 0 && (
-                    <tr className="bg-slate-100/60 dark:bg-blue-950/40 text-slate-900 dark:text-white font-extrabold text-xs">
-                      <td colSpan={4} className="py-3 px-2 border-r border-slate-200 dark:border-blue-950/40 text-right">
+                    <tr className="bg-indigo-50/80 dark:bg-indigo-950/50 text-slate-900 dark:text-white font-extrabold text-xs border-t-2 border-b-2 border-indigo-200 dark:border-indigo-900/60 shadow-sm">
+                      <td colSpan={4} className="py-3.5 px-2 border-r border-slate-200 dark:border-blue-950/40 text-right">
                         {lang === 'bn' ? 'মোট =' : 'Total ='}
                       </td>
-                      <td className="py-3 px-2 border-r border-slate-200 dark:border-blue-950/40">
+                      <td className="py-3.5 px-2 border-r border-slate-200 dark:border-blue-950/40">
                         {lang === 'bn' ? toBanglaNumerals(currentPropertyIncomeSum.rent) : currentPropertyIncomeSum.rent.toLocaleString()}
                       </td>
-                      <td className="py-3 px-2 border-r border-slate-200 dark:border-blue-950/40 text-sky-600 dark:text-sky-400">
+                      <td className="py-3.5 px-2 border-r border-slate-200 dark:border-blue-950/40 text-sky-600 dark:text-sky-400">
                         {lang === 'bn' ? toBanglaNumerals(currentPropertyIncomeSum.advance) : currentPropertyIncomeSum.advance.toLocaleString()}
                       </td>
-                      <td className="py-3 px-2 border-r border-slate-200 dark:border-blue-950/40">
+                      <td className="py-3.5 px-2 border-r border-slate-200 dark:border-blue-950/40">
                         {lang === 'bn' ? toBanglaNumerals(currentPropertyIncomeSum.lift) : currentPropertyIncomeSum.lift.toLocaleString()}
                       </td>
-                      <td className="py-3 px-2 border-r border-slate-200 dark:border-blue-950/40 text-blue-600 dark:text-blue-400">
+                      <td className="py-3.5 px-2 border-r border-slate-200 dark:border-blue-950/40 text-blue-600 dark:text-blue-400">
                         {lang === 'bn' ? toBanglaNumerals(currentPropertyIncomeSum.elec) : currentPropertyIncomeSum.elec.toLocaleString()}
                       </td>
-                      <td className="py-3 px-2 border-r border-slate-200 dark:border-blue-950/40 text-orange-600 dark:text-orange-400">
+                      <td className="py-3.5 px-2 border-r border-slate-200 dark:border-blue-950/40 text-orange-600 dark:text-orange-400">
                         {lang === 'bn' ? toBanglaNumerals(currentPropertyIncomeSum.gas) : currentPropertyIncomeSum.gas.toLocaleString()}
                       </td>
-                      <td className="py-3 px-2 border-r border-slate-200 dark:border-blue-950/40">
+                      <td className="py-3.5 px-2 border-r border-slate-200 dark:border-blue-950/40">
                         {lang === 'bn' ? toBanglaNumerals(currentPropertyIncomeSum.garage) : currentPropertyIncomeSum.garage.toLocaleString()}
                       </td>
-                      <td className="py-3 px-2 border-r border-slate-200 dark:border-blue-950/40 text-emerald-600 dark:text-emerald-400 bg-emerald-500/5">
+                      <td className="py-3.5 px-2 border-r border-slate-200 dark:border-blue-950/40 text-emerald-600 dark:text-emerald-400 bg-emerald-500/10">
                         {lang === 'bn' ? toBanglaNumerals(currentPropertyIncomeSum.total) : currentPropertyIncomeSum.total.toLocaleString()}
                       </td>
-                      <td className="py-3 px-2 no-print"></td>
+                      <td className="py-3.5 px-2 no-print"></td>
                     </tr>
                   )}
                 </tbody>
@@ -785,106 +785,6 @@ export default function Reports({ companyId }: { companyId: string }) {
                 </div>
               </div>
             )}
-
-            {/* Inline Add Income Row Sub-Form (No-Print) */}
-            <div className="no-print border border-dashed border-slate-300 dark:border-blue-950/50 rounded-2xl p-4">
-              {!showIncomeForm ? (
-                <button
-                  onClick={() => setShowIncomeForm(true)}
-                  className="w-full py-3 flex items-center justify-center gap-1.5 text-xs text-sky-500 dark:text-sky-400 font-bold hover:bg-slate-50 dark:hover:bg-slate-900 rounded-xl transition-all"
-                >
-                  <Plus className="w-4 h-4" />
-                  {lang === 'bn' ? 'নতুন কালেকশন এন্ট্রি যোগ করুন' : 'Add New Income/Collection Record'}
-                </button>
-              ) : (
-                <form onSubmit={handleAddIncome} className="space-y-4">
-                  <span className="text-xs font-bold text-slate-400 uppercase block mb-1">New Tenant Collection Record</span>
-                  <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-                    <input 
-                      type="text" 
-                      placeholder="Floor (ফ্লোর নং)" 
-                      value={newFloor}
-                      onChange={(e) => setNewFloor(e.target.value)}
-                      className="p-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-850 rounded-xl text-xs outline-none text-slate-300"
-                    />
-                    <input 
-                      type="text" 
-                      placeholder="Flat (ফ্ল্যাট নং)" 
-                      value={newFlat}
-                      onChange={(e) => setNewFlat(e.target.value)}
-                      className="p-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-850 rounded-xl text-xs outline-none text-slate-300"
-                      required
-                    />
-                    <input 
-                      type="text" 
-                      placeholder="Tenant (ভাড়াটিয়ার নাম)" 
-                      value={newTenant}
-                      onChange={(e) => setNewTenant(e.target.value)}
-                      className="p-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-850 rounded-xl text-xs outline-none text-slate-300"
-                      required
-                    />
-                    <input 
-                      type="number" 
-                      placeholder="Flat Rent (ফ্ল্যাট ভাড়া)" 
-                      value={newRent}
-                      onChange={(e) => setNewRent(e.target.value)}
-                      className="p-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-850 rounded-xl text-xs outline-none text-slate-300"
-                    />
-                    <input 
-                      type="number" 
-                      placeholder="Advance (অগ্রিম দেয়া)" 
-                      value={newAdvance}
-                      onChange={(e) => setNewAdvance(e.target.value)}
-                      className="p-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-850 rounded-xl text-xs outline-none text-slate-300"
-                    />
-                    <input 
-                      type="number" 
-                      placeholder="Lift Bill (লিফট ভাড়া)" 
-                      value={newLift}
-                      onChange={(e) => setNewLift(e.target.value)}
-                      className="p-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-850 rounded-xl text-xs outline-none text-slate-300"
-                    />
-                    <input 
-                      type="number" 
-                      placeholder="Electricity (বিদ্যুৎ বিল)" 
-                      value={newElec}
-                      onChange={(e) => setNewElec(e.target.value)}
-                      className="p-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-850 rounded-xl text-xs outline-none text-slate-300"
-                    />
-                    <input 
-                      type="number" 
-                      placeholder="Gas Bill (গ্যাস বিল)" 
-                      value={newGas}
-                      onChange={(e) => setNewGas(e.target.value)}
-                      className="p-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-850 rounded-xl text-xs outline-none text-slate-300"
-                    />
-                    <input 
-                      type="number" 
-                      placeholder="Garage (গ্যারেজ ভাড়া)" 
-                      value={newGarage}
-                      onChange={(e) => setNewGarage(e.target.value)}
-                      className="p-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-850 rounded-xl text-xs outline-none text-slate-300"
-                    />
-                  </div>
-                  <div className="flex justify-end gap-2 text-xs">
-                    <button
-                      type="button"
-                      onClick={() => setShowIncomeForm(false)}
-                      className="px-4 py-2 border border-slate-200 dark:border-slate-800 hover:bg-slate-100 rounded-xl text-slate-600 dark:text-slate-400"
-                    >
-                      {t('cancel')}
-                    </button>
-                    <button
-                      type="submit"
-                      className="px-5 py-2 bg-sky-500 hover:bg-sky-600 text-white rounded-xl font-bold flex items-center gap-1"
-                    >
-                      <Check className="w-4 h-4" />
-                      {lang === 'bn' ? 'সংরক্ষণ করুন' : 'Save Record'}
-                    </button>
-                  </div>
-                </form>
-              )}
-            </div>
 
           </div>
         )}
@@ -948,14 +848,14 @@ export default function Reports({ companyId }: { companyId: string }) {
                   )}
                   {/* Ledger Summary / Grand Totals Row */}
                   {filteredExpense.length > 0 && (
-                    <tr className="bg-slate-100/60 dark:bg-blue-950/40 text-slate-900 dark:text-white font-extrabold text-xs">
-                      <td colSpan={5} className="py-3 px-3 border-r border-slate-200 dark:border-blue-950/40 text-right">
+                    <tr className="bg-indigo-50/80 dark:bg-indigo-950/50 text-slate-900 dark:text-white font-extrabold text-xs border-t-2 border-b-2 border-indigo-200 dark:border-indigo-900/60 shadow-sm">
+                      <td colSpan={5} className="py-3.5 px-3 border-r border-slate-200 dark:border-blue-950/40 text-right">
                         {lang === 'bn' ? 'মোট খরচ =' : 'Total Expense ='}
                       </td>
-                      <td className="py-3 px-3 border-r border-slate-200 dark:border-blue-950/40 text-rose-500 bg-rose-500/5 font-black text-sm">
+                      <td className="py-3.5 px-3 border-r border-slate-200 dark:border-blue-950/40 text-rose-500 bg-rose-500/10 font-black text-sm">
                         {lang === 'bn' ? toBanglaNumerals(currentPropertyExpenseSum.toLocaleString()) : currentPropertyExpenseSum.toLocaleString()}
                       </td>
-                      <td className="py-3 px-3 no-print"></td>
+                      <td className="py-3.5 px-3 no-print"></td>
                     </tr>
                   )}
                 </tbody>
@@ -1126,18 +1026,18 @@ export default function Reports({ companyId }: { companyId: string }) {
                   })}
 
                   {/* Summary dynamic totals row */}
-                  <tr className="bg-slate-100/60 dark:bg-blue-950/40 text-slate-900 dark:text-white font-extrabold text-xs">
-                    <td colSpan={2} className="py-3 px-3 border-r border-slate-200 dark:border-blue-950/40 text-right">
+                  <tr className="bg-indigo-50/80 dark:bg-indigo-950/50 text-slate-900 dark:text-white font-extrabold text-xs border-t-2 border-b-2 border-indigo-200 dark:border-indigo-900/60 shadow-sm">
+                    <td colSpan={2} className="py-3.5 px-3 border-r border-slate-200 dark:border-blue-950/40 text-right">
                       {lang === 'bn' ? 'মোট =' : 'Total ='}
                     </td>
-                    <td className="py-3 px-3 border-r border-slate-200 dark:border-blue-950/40 text-emerald-600 bg-emerald-500/5 font-black text-sm">
+                    <td className="py-3.5 px-3 border-r border-slate-200 dark:border-blue-950/40 text-emerald-600 bg-emerald-500/10 font-black text-sm">
                       {lang === 'bn' ? toBanglaNumerals(summaryGrandTotalIncome.toLocaleString()) : summaryGrandTotalIncome.toLocaleString()}
                     </td>
-                    <td className="py-3 px-3 border-r border-slate-200 dark:border-blue-950/40 text-rose-500 bg-rose-500/5 font-black text-sm">
+                    <td className="py-3.5 px-3 border-r border-slate-200 dark:border-blue-950/40 text-rose-500 bg-rose-500/10 font-black text-sm">
                       {lang === 'bn' ? toBanglaNumerals(summaryGrandTotalExpense.toLocaleString()) : summaryGrandTotalExpense.toLocaleString()}
                     </td>
-                    <td className="py-3 px-3 border-r border-slate-200 dark:border-blue-950/40"></td>
-                    <td className="py-3 px-3 no-print"></td>
+                    <td className="py-3.5 px-3 border-r border-slate-200 dark:border-blue-950/40"></td>
+                    <td className="py-3.5 px-3 no-print"></td>
                   </tr>
 
                 </tbody>

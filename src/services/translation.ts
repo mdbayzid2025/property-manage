@@ -9,11 +9,10 @@ const translations = {
     footerMadeBy: 'মেড বাই সফটওয়্যার পয়েন্ট',
     hotline: 'হটলাইন: ০১৭২৪-৫৬১৬৭০',
     slogan: 'আধুনিক প্রপার্টি ম্যানেজমেন্ট সফটওয়্যার',
-    
+
     // Sidebar / Navigation
     dashboard: 'ড্যাশবোর্ড',
     propertyMgmt: 'প্রপার্টি ম্যানেজমেন্ট',
-    unitMgmt: 'ফ্ল্যাট / ইউনিট',
     tenantMgmt: 'ভাড়াটিয়া তথ্য',
     rentMgmt: 'ভাড়া কালেকশন',
     receiptMgmt: 'মানি রিসিট',
@@ -31,7 +30,7 @@ const translations = {
     reports: 'রিপোর্ট সমূহ',
     superAdmin: 'সুপার এডমিন',
     tenantPortal: 'ভাড়াটিয়া পোর্টাল',
-    
+
     // Quick Controls
     selectOrg: 'প্রতিষ্ঠান নির্বাচন',
     selectRole: 'রোল নির্বাচন',
@@ -67,7 +66,7 @@ const translations = {
     salesSummary: 'বিক্রয় সামারি',
     bookingSummary: 'বুকিং বিবরণী',
     customerSummary: 'গ্রাহক সংখ্যা',
-    
+
     // Common Actions
     add: 'যোগ করুন',
     edit: 'সম্পাদনা',
@@ -106,7 +105,7 @@ const translations = {
     balcony: 'বারান্দা',
     facing: 'দিক',
     meterNumber: 'মিটার নম্বর',
-    
+
     // Tenant Fields
     tenantName: 'ভাড়াটিয়ার নাম',
     phone: 'মোবাইল নম্বর',
@@ -115,7 +114,7 @@ const translations = {
     emergencyContact: 'জরুরি যোগাযোগ',
     moveInDate: 'ভাড়ার তারিখ',
     agreementDoc: 'চুক্তিপত্র ফাইল',
-    
+
     // Invoice / Payments
     invoiceNumber: 'ইনভয়েস নং',
     receiptNumber: 'রিসিট নং',
@@ -132,7 +131,7 @@ const translations = {
     rocket: 'রকেট',
     bank: 'ব্যাংক ট্রান্সফার',
     cheque: 'চেক',
-    
+
     // Utilities
     electricity: 'বিদ্যুৎ বিল',
     gas: 'গ্যাস বিল',
@@ -145,7 +144,7 @@ const translations = {
     prevReading: 'পূর্ববর্তী রিডিং',
     currReading: 'বর্তমান রিডিং',
     unitPrice: 'ইউনিট প্রতি মূল্য',
-    
+
     // Maintenance
     issueTitle: 'সমস্যার বিবরণ',
     technicianName: 'টেকনিশিয়ানের নাম',
@@ -155,7 +154,7 @@ const translations = {
     high: 'উচ্চ',
     medium: 'মাঝারি',
     low: 'নিম্ন',
-    
+
     // AI Assistant
     aiSmartTitle: 'এআই স্মার্ট প্রেডিকশন ও ফোরকাস্ট',
     aiVacancyPredict: 'এআই ফাঁকা হওয়ার পূর্বাভাস',
@@ -165,7 +164,7 @@ const translations = {
     aiChatAssistant: 'এআই ইআরপি চ্যাট অ্যাসিস্ট্যান্ট',
     aiChatPlaceholder: 'প্রপার্টি বা হিসাব নিয়ে প্রশ্ন করুন...',
     aiResponseLabel: 'এআই উত্তর',
-    
+
     // Accounting
     chartOfAccounts: 'চার্ট অফ অ্যাকাউন্টস',
     debit: 'ডেবিট',
@@ -176,7 +175,7 @@ const translations = {
     journalEntry: 'জার্নাল এন্ট্রি',
     pettyCash: 'খুচরা ক্যাশ',
     profitAndLoss: 'লাভ-ক্ষতি হিসাব',
-    
+
     // Visitor & Parking
     visitorName: 'ভিজিটরের নাম',
     whomToVisit: 'যার সাথে সাক্ষাৎ করবেন',
@@ -184,7 +183,7 @@ const translations = {
     exitTime: 'বাহির হওয়ার সময়',
     passCode: 'পাস কোড',
     parkingNo: 'পার্কিং স্পেস নং',
-    
+
     // Reports Additions
     reportFloorNo: 'ফ্লোর নং',
     reportFlatNo: 'ফ্ল্যাট নং',
@@ -219,11 +218,10 @@ const translations = {
     footerMadeBy: 'Made by Software Point',
     hotline: 'Hotline: 01724-561670',
     slogan: 'Modern Property Management ERP',
-    
+
     // Sidebar / Navigation
     dashboard: 'Dashboard',
     propertyMgmt: 'Property Management',
-    unitMgmt: 'Unit / Flat Management',
     tenantMgmt: 'Tenant CRM',
     rentMgmt: 'Rent Management',
     receiptMgmt: 'Money Receipt',
@@ -241,7 +239,7 @@ const translations = {
     reports: 'Reports Dashboard',
     superAdmin: 'Super Admin Panel',
     tenantPortal: 'Tenant Portal',
-    
+
     // Quick Controls
     selectOrg: 'Switch Company',
     selectRole: 'Switch Role',
@@ -277,7 +275,7 @@ const translations = {
     salesSummary: 'Sales Summary',
     bookingSummary: 'Booking Summary',
     customerSummary: 'Total Customers',
-    
+
     // Common Actions
     add: 'Add New',
     edit: 'Edit',
@@ -316,7 +314,7 @@ const translations = {
     balcony: 'Balcony',
     facing: 'Facing Direction',
     meterNumber: 'Meter Number',
-    
+
     // Tenant Fields
     tenantName: 'Tenant Name',
     phone: 'Mobile Phone',
@@ -325,7 +323,7 @@ const translations = {
     emergencyContact: 'Emergency Contact',
     moveInDate: 'Move In Date',
     agreementDoc: 'Agreement PDF',
-    
+
     // Invoice / Payments
     invoiceNumber: 'Invoice No',
     receiptNumber: 'Receipt No',
@@ -342,7 +340,7 @@ const translations = {
     rocket: 'Rocket Wallet',
     bank: 'Bank Transfer',
     cheque: 'Cheque Payment',
-    
+
     // Utilities
     electricity: 'Electricity Bill',
     gas: 'Gas Bill',
@@ -355,7 +353,7 @@ const translations = {
     prevReading: 'Previous Meter Reading',
     currReading: 'Current Meter Reading',
     unitPrice: 'Unit Unit Price',
-    
+
     // Maintenance
     issueTitle: 'Maintenance Description',
     technicianName: 'Technician Name',
@@ -365,7 +363,7 @@ const translations = {
     high: 'High',
     medium: 'Medium',
     low: 'Low',
-    
+
     // AI Assistant
     aiSmartTitle: 'AI Smart Forecasting & Insights',
     aiVacancyPredict: 'AI Vacancy Prediction',
@@ -375,7 +373,7 @@ const translations = {
     aiChatAssistant: 'AI ERP Chat Assistant',
     aiChatPlaceholder: 'Ask something about accounts, rents or leases...',
     aiResponseLabel: 'AI Response',
-    
+
     // Accounting
     chartOfAccounts: 'Chart of Accounts',
     debit: 'Debit',
@@ -386,7 +384,7 @@ const translations = {
     journalEntry: 'Journal Ledger',
     pettyCash: 'Petty Cash Log',
     profitAndLoss: 'Profit & Loss Statement',
-    
+
     // Visitor & Parking
     visitorName: 'Visitor Full Name',
     whomToVisit: 'Host/Unit to Visit',
@@ -394,7 +392,7 @@ const translations = {
     exitTime: 'Check-Out Time',
     passCode: 'Entry Code',
     parkingNo: 'Parking Bay No',
-    
+
     // Reports Additions
     reportFloorNo: 'Floor No',
     reportFlatNo: 'Flat No',
