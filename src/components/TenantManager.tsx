@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import { useTranslation } from '../services/translation';
 import { MockDB, Tenant, Unit, Property, TenantDoc } from '../services/db';
-import { 
-  Users, Search, Plus, UserPlus, Info, CheckCircle, Ban, 
-  Building, Phone, Calendar, ShieldAlert, FileText, Upload, Trash2, X, User 
+import {
+  Users, Search, UserPlus, Info, CheckCircle, Ban,
+  Phone, Calendar, ShieldAlert, FileText, Upload, Trash2, X, User
 } from 'lucide-react';
 
 export default function TenantManager({ companyId }: { companyId: string }) {
   const { t, lang } = useTranslation();
 
   // Database lists
-  const [tenants, setTenants] = useState<Tenant[]>(() => 
+  const [tenants, setTenants] = useState<Tenant[]>(() =>
     MockDB.getTable<Tenant>('tenants').filter(t => t.companyId === companyId)
   );
   const [units, setUnits] = useState<Unit[]>(() => MockDB.getTable<Unit>('units'));
@@ -39,8 +39,7 @@ export default function TenantManager({ companyId }: { companyId: string }) {
     e.preventDefault();
     if (!name.trim() || !phone.trim() || !unitId) return;
 
-    // Create Tenant
-    const newTenant = MockDB.insert<Tenant>('tenants', {
+    MockDB.insert<Tenant>('tenants', {
       id: 'tn_' + Math.random().toString(36).substr(2, 9),
       companyId,
       name,
@@ -55,14 +54,11 @@ export default function TenantManager({ companyId }: { companyId: string }) {
       documents: newTenantDocs
     });
 
-    // Update Unit state in DB to occupied
     MockDB.update<Unit>('units', unitId, { status: 'occupied' });
 
-    // Refresh lists
     setTenants(MockDB.getTable<Tenant>('tenants').filter(t => t.companyId === companyId));
     setUnits(MockDB.getTable<Unit>('units'));
 
-    // Reset Form
     setName('');
     setPhone('');
     setOccupation('');
@@ -90,21 +86,6 @@ export default function TenantManager({ companyId }: { companyId: string }) {
     return matchesSearch && matchesStatus;
   });
 
-  // Group tenants by property helper
-  const getTenantsForProperty = (propertyId: string) => {
-    return filteredTenants.filter(t => {
-      const unit = units.find(u => u.id === t.unitId);
-      return unit?.propertyId === propertyId;
-    });
-  };
-
-  // Get unassigned tenants (if any)
-  const unassignedTenants = filteredTenants.filter(t => {
-    const unit = units.find(u => u.id === t.unitId);
-    if (!unit) return true;
-    return !properties.some(p => p.id === unit.propertyId);
-  });
-
   return (
     <div className="space-y-6 text-sm">
       {/* Header section */}
@@ -119,12 +100,12 @@ export default function TenantManager({ companyId }: { companyId: string }) {
           </div>
         </div>
 
-        <button 
+        <button
           onClick={() => setShowAddForm(!showAddForm)}
           className="px-3.5 py-2 bg-sky-500 hover:bg-sky-600 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-lg shadow-sky-500/10 transition-all"
         >
           <UserPlus className="w-4 h-4" />
-          {lang === 'bn' ? 'ভাড়াটিয়া যোগ করুন' : 'Add Tenant'}
+          {lang === 'bn' ? 'ভাড়াটিয়া যোগ করুন' : 'Add Tenant'}
         </button>
       </div>
 
@@ -133,8 +114,8 @@ export default function TenantManager({ companyId }: { companyId: string }) {
         <form onSubmit={handleAddTenant} className="glass-panel rounded-2xl p-5 border border-slate-200 dark:border-blue-900/30 grid grid-cols-1 md:grid-cols-3 gap-4 animate-slide-in">
           <div>
             <label className="text-xs text-slate-550 dark:text-slate-400 block mb-1">Full Name *</label>
-            <input 
-              type="text" 
+            <input
+              type="text"
               placeholder="যেমন: মোঃ আশরাফুল ইসলাম"
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -144,8 +125,8 @@ export default function TenantManager({ companyId }: { companyId: string }) {
           </div>
           <div>
             <label className="text-xs text-slate-550 dark:text-slate-400 block mb-1">Mobile Phone *</label>
-            <input 
-              type="text" 
+            <input
+              type="text"
               placeholder="যেমন: 017XXXXXXXX"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
@@ -155,8 +136,8 @@ export default function TenantManager({ companyId }: { companyId: string }) {
           </div>
           <div>
             <label className="text-xs text-slate-550 dark:text-slate-400 block mb-1">Occupation</label>
-            <input 
-              type="text" 
+            <input
+              type="text"
               placeholder="যেমন: ব্যাংকার"
               value={occupation}
               onChange={(e) => setOccupation(e.target.value)}
@@ -165,7 +146,7 @@ export default function TenantManager({ companyId }: { companyId: string }) {
           </div>
           <div>
             <label className="text-xs text-slate-550 dark:text-slate-400 block mb-1">Assign Vacant Flat / Shop *</label>
-            <select 
+            <select
               value={unitId}
               onChange={(e) => setUnitId(e.target.value)}
               className="w-full p-2.5 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-blue-950/40 rounded-xl text-xs outline-none text-slate-800 dark:text-slate-350"
@@ -184,8 +165,8 @@ export default function TenantManager({ companyId }: { companyId: string }) {
           </div>
           <div>
             <label className="text-xs text-slate-550 dark:text-slate-400 block mb-1">Emergency Contact Info</label>
-            <input 
-              type="text" 
+            <input
+              type="text"
               placeholder="যেমন: ০১৮১২-XXXXXX (স্ত্রী)"
               value={emergency}
               onChange={(e) => setEmergency(e.target.value)}
@@ -195,15 +176,14 @@ export default function TenantManager({ companyId }: { companyId: string }) {
           <div className="md:col-span-3">
             <label className="text-xs text-slate-550 dark:text-slate-400 block mb-1">Required Documents (ছবি বা ফাইল আপলোড)</label>
             <div className="flex flex-col gap-2.5">
-              {/* Drag & drop / Select file zone */}
               <label className="w-full py-4 border border-dashed border-slate-300 dark:border-blue-900/35 hover:border-sky-500 dark:hover:border-sky-500 bg-slate-50/50 dark:bg-slate-950/10 rounded-2xl flex flex-col items-center justify-center gap-1.5 cursor-pointer transition-all hover:bg-slate-100/50">
                 <Upload className="w-5 h-5 text-slate-400" />
                 <span className="text-[10px] font-bold text-slate-600 dark:text-slate-400">ডকুমেন্ট / ছবি আপলোড করুন</span>
-                <input 
-                  type="file" 
-                  multiple 
-                  accept="image/*,application/pdf" 
-                  className="hidden" 
+                <input
+                  type="file"
+                  multiple
+                  accept="image/*,application/pdf"
+                  className="hidden"
                   onChange={(e) => {
                     if (!e.target.files) return;
                     const filesArray = Array.from(e.target.files);
@@ -223,14 +203,13 @@ export default function TenantManager({ companyId }: { companyId: string }) {
                 />
               </label>
 
-              {/* Previews List */}
               {newTenantDocs.length > 0 && (
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-2 max-h-32 overflow-y-auto pr-1">
                   {newTenantDocs.map((doc, idx) => (
                     <div key={idx} className="p-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-blue-950/50 rounded-xl flex justify-between items-center text-[10px] gap-1.5">
                       <span className="font-semibold text-slate-600 dark:text-slate-350 truncate flex-1">{doc.name}</span>
-                      <button 
-                        type="button" 
+                      <button
+                        type="button"
                         onClick={() => setNewTenantDocs(prev => prev.filter((_, i) => i !== idx))}
                         className="p-1 hover:bg-rose-500/10 text-rose-500 rounded transition-colors"
                       >
@@ -243,7 +222,7 @@ export default function TenantManager({ companyId }: { companyId: string }) {
             </div>
           </div>
           <div className="md:col-span-3 flex justify-end">
-            <button 
+            <button
               type="submit"
               className="px-6 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold rounded-xl text-xs shadow-md shadow-emerald-500/10"
             >
@@ -257,14 +236,14 @@ export default function TenantManager({ companyId }: { companyId: string }) {
       <div className="glass-panel rounded-2xl p-4 border border-slate-200 dark:border-blue-900/30 flex flex-col md:flex-row gap-4 items-center justify-between">
         <span className="font-extrabold text-sm text-slate-850 dark:text-slate-200 flex items-center gap-1.5 shrink-0">
           <Info className="w-4 h-4 text-sky-500" />
-          {lang === 'bn' ? `মোট ভাড়াটিয়া ডাটাবেজ (${filteredTenants.length} জন)` : `Total Tenant Directory (${filteredTenants.length} profiles)`}
+          {lang === 'bn' ? `মোট ভাড়াটিয়া ডাটাবেজ (${filteredTenants.length} জন)` : `Total Tenant Directory (${filteredTenants.length} profiles)`}
         </span>
         <div className="flex gap-3 w-full md:w-auto">
           <div className="flex items-center space-x-2 bg-slate-50 dark:bg-slate-900 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 w-full md:w-80">
             <Search className="w-4 h-4 text-slate-500" />
-            <input 
-              type="text" 
-              placeholder={lang === 'bn' ? "ভাড়াটিয়ার নাম বা মোবাইল খুঁজুন..." : "Search name or phone..."}
+            <input
+              type="text"
+              placeholder={lang === 'bn' ? "ভাড়াটিয়ার নাম বা মোবাইল খুঁজুন..." : "Search name or phone..."}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="bg-transparent outline-none border-none text-xs text-slate-800 dark:text-slate-300 w-full"
@@ -282,233 +261,75 @@ export default function TenantManager({ companyId }: { companyId: string }) {
         </div>
       </div>
 
-      {/* Property-grouped card displays */}
-      <div className="space-y-8">
-        
-        {properties.map(property => {
-          const propertyTenants = getTenantsForProperty(property.id);
-          if (propertyTenants.length === 0) return null;
-
-          return (
-            <div key={property.id} className="space-y-4">
-              <div className="flex items-center gap-2 border-l-4 border-sky-500 pl-3">
-                <Building className="w-5 h-5 text-sky-500 dark:text-sky-400" />
-                <h3 className="text-sm font-black text-slate-850 dark:text-slate-200 uppercase tracking-wider">
-                  {property.name}
-                </h3>
-                <span className="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 text-slate-500 rounded-full text-[10px] font-bold">
-                  {propertyTenants.length} tenants
-                </span>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {propertyTenants.map(tenant => {
+      {/* Single Table display for Tenant Directory */}
+      <div className="glass-panel rounded-2xl border border-slate-200 dark:border-blue-900/30 overflow-hidden shadow-sm">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-xs">
+            <thead>
+              <tr className="bg-slate-50 dark:bg-blue-950/20 border-b border-slate-200 dark:border-blue-950/40 text-slate-500 dark:text-slate-400">
+                <th className="p-4 font-bold">Tenant Name / Occupation</th>
+                <th className="p-4 font-bold">Property & Flat / Shop</th>
+                <th className="p-4 font-bold">Mobile Phone</th>
+                <th className="p-4 font-bold">Emergency Contact</th>
+                <th className="p-4 font-bold">Move-In Date</th>
+                <th className="p-4 font-bold">Documents</th>
+                <th className="p-4 font-bold">Status</th>
+                <th className="p-4 font-bold text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100 dark:divide-blue-950/30">
+              {filteredTenants.length === 0 ? (
+                <tr>
+                  <td colSpan={8} className="p-8 text-center text-slate-400 font-medium italic">
+                    {lang === 'bn' ? 'কোনো ভাড়াটিয়ার তথ্য পাওয়া যায়নি।' : 'No tenant directory records match the search filter.'}
+                  </td>
+                </tr>
+              ) : (
+                filteredTenants.map((tenant) => {
                   const unit = units.find(u => u.id === tenant.unitId);
+                  const prop = unit ? properties.find(p => p.id === unit.propertyId) : null;
                   const isBlocked = tenant.status === 'blacklisted';
 
                   return (
-                    <div 
-                      key={tenant.id}
-                      className={`glass-panel border rounded-3xl p-5 flex flex-col justify-between transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg ${
-                        isBlocked 
-                          ? 'border-rose-500/20 bg-rose-500/[0.02]' 
-                          : 'border-slate-200 dark:border-blue-900/20 bg-white dark:bg-slate-900/40'
-                      }`}
-                    >
-                      <div className="space-y-4">
-                        {/* Title & Badge */}
-                        <div className="flex justify-between items-start gap-2">
+                    <tr key={tenant.id} className="hover:bg-slate-50/50 dark:hover:bg-blue-950/10 transition-colors">
+                      <td className="p-4">
+                        <div className="font-bold text-slate-800 dark:text-slate-200">{tenant.name}</div>
+                        <div className="text-[10px] text-slate-450">{tenant.occupation || 'N/A'}</div>
+                      </td>
+                      <td className="p-4">
+                        {unit ? (
                           <div>
-                            <h4 className="font-extrabold text-sm text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
-                              {tenant.name}
-                            </h4>
-                            <p className="text-xs text-slate-400 font-medium">{tenant.occupation || 'Occupation N/A'}</p>
+                            <div className="font-semibold text-slate-700 dark:text-slate-350">{prop ? prop.name : 'N/A'}</div>
+                            <div className="text-[10px] text-slate-500 font-bold">{unit.number} ({unit.type.toUpperCase()})</div>
                           </div>
-                          <span className={`px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider ${
-                            isBlocked ? 'bg-rose-500/10 text-rose-500 border border-rose-500/20' : 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/25'
-                          }`}>
-                            {tenant.status === 'active' ? (lang === 'bn' ? 'সক্রিয়' : 'Active') : (lang === 'bn' ? 'ব্লকড' : 'Blocked')}
-                          </span>
-                        </div>
-
-                        {/* Flat Details */}
-                        {unit && (
-                          <div className="p-3 bg-slate-50 dark:bg-slate-950/20 border border-slate-200/50 dark:border-slate-800/80 rounded-2xl text-xs space-y-1">
-                            <div className="flex justify-between">
-                              <span className="text-slate-400 block text-[10px] uppercase font-bold tracking-wider">Assigned Flat</span>
-                              <strong className="text-slate-800 dark:text-slate-250 font-extrabold">{unit.number} ({unit.type.toUpperCase()})</strong>
-                            </div>
-                            <div className="flex justify-between pt-1 border-t border-slate-200/40 dark:border-slate-800/40">
-                              <span className="text-slate-400 block text-[10px] uppercase font-bold tracking-wider">Monthly Rent</span>
-                              <strong className="text-sky-500 font-extrabold">৳ {unit.rentAmount.toLocaleString()}</strong>
-                            </div>
-                          </div>
+                        ) : (
+                          <span className="text-slate-400">Unassigned</span>
                         )}
-
-                        {/* Tenant Contacts */}
-                        <div className="space-y-1.5 text-xs text-slate-650 dark:text-slate-350">
-                          <div className="flex items-center gap-2">
-                            <Phone className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                            <span>{tenant.phone}</span>
-                          </div>
-                          {tenant.emergencyContact && (
-                            <div className="flex items-center gap-2">
-                              <ShieldAlert className="w-3.5 h-3.5 text-amber-500 shrink-0" />
-                              <span className="text-slate-500">{tenant.emergencyContact}</span>
-                            </div>
-                          )}
-                          <div className="flex items-center gap-2">
-                            <Calendar className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                            <span>Joined: {tenant.moveInDate}</span>
-                          </div>
-                        </div>
-
-                        {/* Provided Documents */}
-                        <div className="space-y-2 pt-3 border-t border-slate-100 dark:border-slate-800/60">
-                          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Submitted Documents</span>
-                          <div className="flex flex-col gap-1.5 text-xs">
-                            {tenant.documents && tenant.documents.length > 0 ? (
-                              tenant.documents.map((doc, idx) => (
-                                <button
-                                  key={idx}
-                                  onClick={() => {
-                                    setViewingSelectedDoc(doc);
-                                    setViewingDocTenant(tenant);
-                                  }}
-                                  className="w-full text-left px-2.5 py-1.5 bg-sky-500/5 hover:bg-sky-500/10 text-sky-400 border border-sky-500/10 rounded-xl flex items-center gap-1.5 font-semibold text-[10px] transition-colors"
-                                >
-                                  <FileText className="w-3.5 h-3.5 shrink-0" />
-                                  <span className="truncate flex-1">{doc.name} ({doc.size})</span>
-                                  <span className="text-[9px] text-sky-500 font-bold shrink-0">দেখুন</span>
-                                </button>
-                              ))
-                            ) : (
-                              <button
-                                onClick={() => {
-                                  setViewingSelectedDoc({ name: 'Rental Agreement Deed.pdf', size: '1.2 MB', type: 'application/pdf' });
-                                  setViewingDocTenant(tenant);
-                                }}
-                                className="w-full text-left px-2.5 py-1.5 bg-sky-500/5 hover:bg-sky-500/10 text-sky-400 border border-sky-500/10 rounded-xl flex items-center gap-1.5 font-semibold text-[10px] transition-colors"
-                              >
-                                <FileText className="w-3.5 h-3.5 shrink-0" />
-                                <span className="truncate flex-1">Rental Agreement Deed.pdf</span>
-                                <span className="text-[9px] text-sky-500 font-bold shrink-0">দেখুন</span>
-                              </button>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Blacklist Whitelist Actions */}
-                      <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800/60 flex justify-end">
-                        <button
-                          onClick={() => toggleBlacklist(tenant.id)}
-                          className={`px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1 border transition-all ${
-                            isBlocked
-                              ? 'border-emerald-500/30 text-emerald-450 hover:bg-emerald-500/5'
-                              : 'border-rose-500/30 text-rose-450 hover:bg-rose-500/5'
-                          }`}
-                        >
-                          {isBlocked ? (
-                            <>
-                              <CheckCircle className="w-3.5 h-3.5" />
-                              White-list Tenant
-                            </>
-                          ) : (
-                            <>
-                              <Ban className="w-3.5 h-3.5" />
-                              Blacklist Tenant
-                            </>
-                          )}
-                        </button>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          );
-        })}
-
-        {/* Unassigned / Loose tenants (if any exist) */}
-        {unassignedTenants.length > 0 && (
-          <div className="space-y-4">
-            <div className="flex items-center gap-2 border-l-4 border-amber-500 pl-3">
-              <Building className="w-5 h-5 text-amber-500" />
-              <h3 className="text-sm font-black text-slate-850 dark:text-slate-200 uppercase tracking-wider">
-                {lang === 'bn' ? 'অন্যান্য / অবিক্রীত ইউনিটসমূহ' : 'Other / Unassigned Properties'}
-              </h3>
-              <span className="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 text-slate-500 rounded-full text-[10px] font-bold">
-                {unassignedTenants.length} tenants
-              </span>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {unassignedTenants.map(tenant => {
-                const unit = units.find(u => u.id === tenant.unitId);
-                const isBlocked = tenant.status === 'blacklisted';
-
-                return (
-                  <div 
-                    key={tenant.id}
-                    className={`glass-panel border rounded-3xl p-5 flex flex-col justify-between transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg ${
-                      isBlocked 
-                        ? 'border-rose-500/20 bg-rose-500/[0.02]' 
-                        : 'border-slate-200 dark:border-blue-900/20 bg-white dark:bg-slate-900/40'
-                    }`}
-                  >
-                    <div className="space-y-4">
-                      {/* Title & Badge */}
-                      <div className="flex justify-between items-start gap-2">
-                        <div>
-                          <h4 className="font-extrabold text-sm text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
-                            {tenant.name}
-                          </h4>
-                          <p className="text-xs text-slate-400 font-medium">{tenant.occupation || 'Occupation N/A'}</p>
-                        </div>
-                        <span className={`px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider ${
-                          isBlocked ? 'bg-rose-500/10 text-rose-500 border border-rose-500/20' : 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/25'
-                        }`}>
-                          {tenant.status === 'active' ? (lang === 'bn' ? 'সক্রিয়' : 'Active') : (lang === 'bn' ? 'ব্লকড' : 'Blocked')}
-                        </span>
-                      </div>
-
-                      {/* Flat Details */}
-                      {unit && (
-                        <div className="p-3 bg-slate-50 dark:bg-slate-950/20 border border-slate-200/50 dark:border-slate-800/80 rounded-2xl text-xs space-y-1">
-                          <div className="flex justify-between">
-                            <span className="text-slate-400 block text-[10px] uppercase font-bold tracking-wider">Assigned Flat</span>
-                            <strong className="text-slate-800 dark:text-slate-250 font-extrabold">{unit.number} ({unit.type.toUpperCase()})</strong>
-                          </div>
-                          <div className="flex justify-between pt-1 border-t border-slate-200/40 dark:border-slate-800/40">
-                            <span className="text-slate-400 block text-[10px] uppercase font-bold tracking-wider">Monthly Rent</span>
-                            <strong className="text-sky-500 font-extrabold">৳ {unit.rentAmount.toLocaleString()}</strong>
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Tenant Contacts */}
-                      <div className="space-y-1.5 text-xs text-slate-650 dark:text-slate-350">
-                        <div className="flex items-center gap-2">
+                      </td>
+                      <td className="p-4 font-medium text-slate-700 dark:text-slate-300">
+                        <div className="flex items-center gap-1.5">
                           <Phone className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                          <span>{tenant.phone}</span>
+                          {tenant.phone}
                         </div>
-                        {tenant.emergencyContact && (
-                          <div className="flex items-center gap-2">
+                      </td>
+                      <td className="p-4 text-slate-500">
+                        {tenant.emergencyContact ? (
+                          <div className="flex items-center gap-1.5">
                             <ShieldAlert className="w-3.5 h-3.5 text-amber-500 shrink-0" />
-                            <span className="text-slate-500">{tenant.emergencyContact}</span>
+                            {tenant.emergencyContact}
                           </div>
+                        ) : (
+                          '-'
                         )}
-                        <div className="flex items-center gap-2">
+                      </td>
+                      <td className="p-4 text-slate-500">
+                        <div className="flex items-center gap-1.5">
                           <Calendar className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                          <span>Joined: {tenant.moveInDate}</span>
+                          {tenant.moveInDate}
                         </div>
-                      </div>
-
-                      {/* Provided Documents */}
-                      <div className="space-y-2 pt-3 border-t border-slate-100 dark:border-slate-800/60">
-                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Submitted Documents</span>
-                        <div className="flex flex-col gap-1.5 text-xs">
+                      </td>
+                      <td className="p-4">
+                        <div className="flex flex-col gap-1 max-w-[150px]">
                           {tenant.documents && tenant.documents.length > 0 ? (
                             tenant.documents.map((doc, idx) => (
                               <button
@@ -517,11 +338,10 @@ export default function TenantManager({ companyId }: { companyId: string }) {
                                   setViewingSelectedDoc(doc);
                                   setViewingDocTenant(tenant);
                                 }}
-                                className="w-full text-left px-2.5 py-1.5 bg-sky-500/5 hover:bg-sky-500/10 text-sky-400 border border-sky-500/10 rounded-xl flex items-center gap-1.5 font-semibold text-[10px] transition-colors"
+                                className="text-left text-[10px] font-semibold text-sky-500 hover:text-sky-600 truncate flex items-center gap-1 cursor-pointer"
                               >
-                                <FileText className="w-3.5 h-3.5 shrink-0" />
-                                <span className="truncate flex-1">{doc.name} ({doc.size})</span>
-                                <span className="text-[9px] text-sky-500 font-bold shrink-0">দেখুন</span>
+                                <FileText className="w-3 h-3 shrink-0" />
+                                {doc.name}
                               </button>
                             ))
                           ) : (
@@ -530,53 +350,51 @@ export default function TenantManager({ companyId }: { companyId: string }) {
                                 setViewingSelectedDoc({ name: 'Rental Agreement Deed.pdf', size: '1.2 MB', type: 'application/pdf' });
                                 setViewingDocTenant(tenant);
                               }}
-                              className="w-full text-left px-2.5 py-1.5 bg-sky-500/5 hover:bg-sky-500/10 text-sky-400 border border-sky-500/10 rounded-xl flex items-center gap-1.5 font-semibold text-[10px] transition-colors"
+                              className="text-left text-[10px] font-semibold text-sky-500 hover:text-sky-600 truncate flex items-center gap-1 cursor-pointer"
                             >
-                              <FileText className="w-3.5 h-3.5 shrink-0" />
-                              <span className="truncate flex-1">Rental Agreement Deed.pdf</span>
-                              <span className="text-[9px] text-sky-500 font-bold shrink-0">দেখুন</span>
+                              <FileText className="w-3 h-3 shrink-0" />
+                              Agreement Deed
                             </button>
                           )}
                         </div>
-                      </div>
-                    </div>
-
-                    {/* Blacklist Whitelist Actions */}
-                    <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800/60 flex justify-end">
-                      <button
-                        onClick={() => toggleBlacklist(tenant.id)}
-                        className={`px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1 border transition-all ${
-                          isBlocked
-                            ? 'border-emerald-500/30 text-emerald-450 hover:bg-emerald-500/5'
-                            : 'border-rose-500/30 text-rose-450 hover:bg-rose-500/5'
-                        }`}
-                      >
-                        {isBlocked ? (
-                          <>
-                            <CheckCircle className="w-3.5 h-3.5" />
-                            White-list Tenant
-                          </>
-                        ) : (
-                          <>
-                            <Ban className="w-3.5 h-3.5" />
-                            Blacklist Tenant
-                          </>
-                        )}
-                      </button>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        )}
-
-        {/* Empty State */}
-        {filteredTenants.length === 0 && (
-          <div className="py-16 text-center text-slate-500 font-medium italic bg-slate-50/50 dark:bg-blue-950/5 rounded-3xl border border-dashed border-slate-300 dark:border-blue-900/20">
-            {lang === 'bn' ? 'কোনো ভাড়াটিয়ার তথ্য পাওয়া যায়নি।' : 'No tenant directory records match the search filter.'}
-          </div>
-        )}
+                      </td>
+                      <td className="p-4">
+                        <span className={`px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider ${isBlocked
+                            ? 'bg-rose-500/10 text-rose-500 border border-rose-500/20'
+                            : 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/25'
+                          }`}>
+                          {tenant.status === 'active' ? (lang === 'bn' ? 'সক্রিয়' : 'Active') : (lang === 'bn' ? 'ব্লকড' : 'Blocked')}
+                        </span>
+                      </td>
+                      <td className="p-4 text-right">
+                        <button
+                          onClick={() => toggleBlacklist(tenant.id)}
+                          className={`px-2.5 py-1.5 rounded-xl text-[10px] font-bold inline-flex items-center gap-1 border transition-all cursor-pointer ${isBlocked
+                              ? 'border-emerald-500/30 text-emerald-500 hover:bg-emerald-500/5'
+                              : 'border-rose-500/30 text-rose-500 hover:bg-rose-500/5'
+                            }`}
+                        >
+                          {isBlocked ? (
+                            <>
+                              <CheckCircle className="w-3.5 h-3.5" />
+                              Activate
+                            </>
+                          ) : (
+                            <>
+                              <Ban className="w-3.5 h-3.5" />
+                              Block
+                            </>
+                          )}
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
 
       {/* Document Viewer Modal Overlay */}
       {viewingSelectedDoc && viewingDocTenant && (
@@ -606,10 +424,10 @@ export default function TenantManager({ companyId }: { companyId: string }) {
             <div className="flex-1 flex justify-center py-4 overflow-y-auto max-h-[60vh] w-full text-slate-800 dark:text-slate-200">
               {viewingSelectedDoc.previewUrl && viewingSelectedDoc.type.startsWith('image/') ? (
                 <div className="flex flex-col items-center justify-center p-2 bg-slate-50 dark:bg-slate-950/20 border border-slate-200 dark:border-slate-800/80 rounded-3xl max-w-lg w-full">
-                  <img 
-                    src={viewingSelectedDoc.previewUrl} 
-                    alt={viewingSelectedDoc.name} 
-                    className="max-w-full max-h-[48vh] object-contain rounded-2xl shadow-md border border-slate-200/50" 
+                  <img
+                    src={viewingSelectedDoc.previewUrl}
+                    alt={viewingSelectedDoc.name}
+                    className="max-w-full max-h-[48vh] object-contain rounded-2xl shadow-md border border-slate-200/50"
                   />
                   <span className="text-[10px] text-slate-400 mt-2 font-bold font-sans">{viewingSelectedDoc.name} ({viewingSelectedDoc.size})</span>
                 </div>
@@ -617,7 +435,6 @@ export default function TenantManager({ companyId }: { companyId: string }) {
                 <div className="space-y-6 w-full max-w-md">
                   {/* Front Side of NID */}
                   <div className="bg-gradient-to-br from-emerald-50/80 to-emerald-100/30 dark:from-emerald-950/20 dark:to-slate-900 border border-emerald-500/20 rounded-2xl p-4 relative shadow-md flex flex-col justify-between h-56 select-none font-sans">
-                    {/* Top crest header */}
                     <div className="flex justify-between items-start gap-2 border-b border-emerald-500/20 pb-1.5">
                       <div className="w-7 h-7 bg-emerald-700 text-white rounded-full flex items-center justify-center text-[10px] font-black shrink-0 border border-emerald-500/20 shadow-sm">BD</div>
                       <div className="text-center flex-1">
@@ -627,7 +444,6 @@ export default function TenantManager({ companyId }: { companyId: string }) {
                       </div>
                       <div className="w-7 h-7 bg-slate-250 rounded-full flex items-center justify-center shrink-0 border border-emerald-500/10">🇧🇩</div>
                     </div>
-                    {/* Card Content body */}
                     <div className="flex gap-3 flex-1 mt-2">
                       <div className="w-20 flex flex-col justify-between items-center py-1">
                         <div className="w-16 h-20 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg flex items-center justify-center text-slate-400 dark:text-slate-600 shadow-sm relative overflow-hidden">
@@ -685,15 +501,14 @@ export default function TenantManager({ companyId }: { companyId: string }) {
                         </div>
                       </div>
 
-                      {/* Simulated Barcode block */}
                       <div className="bg-white p-2 rounded-lg border border-slate-200 mt-3 shadow-inner flex flex-col justify-center items-center gap-1.5 h-16 w-full">
                         <div className="flex gap-[1.5px] items-stretch justify-center h-8 w-full">
                           {Array.from({ length: 42 }).map((_, idx) => (
                             <div
                               key={idx}
                               className={`bg-slate-900 rounded-sm shrink-0 ${idx % 3 === 0 ? 'w-[1px]' :
-                                idx % 5 === 0 ? 'w-[2.5px]' :
-                                  idx % 7 === 0 ? 'w-[1.5px]' : 'w-[2px]'
+                                  idx % 5 === 0 ? 'w-[2.5px]' :
+                                    idx % 7 === 0 ? 'w-[1.5px]' : 'w-[2px]'
                                 }`}
                             ></div>
                           ))}
@@ -708,8 +523,7 @@ export default function TenantManager({ companyId }: { companyId: string }) {
                 </div>
               ) : (
                 /* Rental Deed Mockup */
-                <div className="bg-orange-50/15 dark:bg-slate-900 border-t-[14px] border-emerald-700 border-x border-b border-slate-200 dark:border-slate-800 rounded-b-2xl p-6 space-y-5 w-full max-w-lg shadow-lg relative text-slate-800 dark:text-slate-250 font-serif leading-relaxed text-xs font-sans">
-                  {/* Stamp Seal Mockup */}
+                <div className="bg-orange-50/15 dark:bg-slate-900 border-t-[14px] border-emerald-700 border-x border-b border-slate-200 dark:border-slate-800 rounded-b-2xl p-6 space-y-5 w-full max-w-lg shadow-lg relative text-slate-800 dark:text-slate-250 font-serif leading-relaxed text-xs">
                   <div className="border border-dashed border-emerald-700/40 p-3 rounded-xl flex flex-col items-center justify-center space-y-1 text-emerald-800 dark:text-emerald-400 select-none">
                     <span className="text-[14px] tracking-widest font-black block uppercase">গণপ্রজাতন্ত্রী বাংলাদেশ সরকার</span>
                     <div className="w-10 h-10 border border-emerald-700 rounded-full flex items-center justify-center font-black text-xs">১০০</div>
@@ -717,7 +531,6 @@ export default function TenantManager({ companyId }: { companyId: string }) {
                     <span className="text-[8px] block text-slate-450 font-sans">JUDICIAL STAMP PAPER DEED BANGLADESH</span>
                   </div>
 
-                  {/* Title of agreement */}
                   <div className="text-center font-bold tracking-wider pt-2">
                     <h4 className="text-[13px] font-black text-slate-900 dark:text-slate-100 uppercase underline">অস্থায়ী ফ্ল্যাট/দোকান ভাড়া চুক্তিপত্র দলিল</h4>
                   </div>
@@ -737,17 +550,16 @@ export default function TenantManager({ companyId }: { companyId: string }) {
                       </div>
                       <div className="flex justify-between font-sans">
                         <span>২. ভাড়াটিয়া স্থিতি:</span>
-                        <span className="text-emerald-500 font-sans">সক্রিয় ভাড়াটিয়া</span>
+                        <span className="text-emerald-500 font-sans">সক্রিয় ভাড়াটিয়া</span>
                       </div>
                     </div>
 
                     <ul className="list-decimal pl-4 space-y-1 text-[10px] text-slate-650 dark:text-slate-400">
-                      <li>প্রতি ইংরেজি মাসের ১০ তারিখের মধ্যে ২য় পক্ষকে অত্র ইউনিটের মাসিক ভাড়া ১ম পক্ষকে পরিশোধ করিতে হইবে।</li>
-                      <li>বিদ্যুৎ, গ্যাস ও পানি বিল সহ অন্যান্য ইউটিলিটি বিল ২য় পক্ষ স্বীয় দায়িত্বে বহন করিবেন।</li>
+                      <li>প্রতি ইংরেজি মাসের ১০ তারিখের মধ্যে ২য় পক্ষকে অত্র ইউনিটের মাসিক ভাড়া ১ম পক্ষকে পরিশোধ করিতে হইবে।</li>
+                      <li>বিদ্যুৎ, গ্যাস ও পানি বিল সহ অন্যান্য ইউটিলিটি বিল ২য় পক্ষ স্বীয় দায়িত্বে বহন করিবেন।</li>
                     </ul>
                   </div>
 
-                  {/* Signatures */}
                   <div className="flex justify-between pt-6 text-[10px] text-slate-650 dark:text-slate-455 select-none font-sans">
                     <div className="text-center w-24">
                       <div className="h-8 flex items-end justify-center font-mono italic text-[9px] text-sky-500 border-b border-dashed border-slate-300 pb-0.5">Manager.BP</div>
@@ -755,7 +567,7 @@ export default function TenantManager({ companyId }: { companyId: string }) {
                     </div>
                     <div className="text-center w-24">
                       <div className="h-8 flex items-end justify-center font-mono italic text-[9px] text-purple-500 border-b border-dashed border-slate-300 pb-0.5">{viewingDocTenant.name.split(' ')[0]}</div>
-                      <span className="block font-bold mt-1">২য় পক্ষ (ভাড়াটিয়া)</span>
+                      <span className="block font-bold mt-1">২য় পক্ষ (ভাড়াটিয়া)</span>
                     </div>
                   </div>
                 </div>
@@ -777,8 +589,6 @@ export default function TenantManager({ companyId }: { companyId: string }) {
           </div>
         </div>
       )}
-
-      </div>
     </div>
   );
 }

@@ -3,18 +3,16 @@ import { useTranslation, Language } from './services/translation';
 import { MockDB, Company } from './services/db';
 
 // Component imports
+// VisitorParking, SalesBooking, and AISmartFeatures have been removed
 import Dashboard from './components/Dashboard';
 import PropertyManager from './components/PropertyManager';
 import TenantManager from './components/TenantManager';
 import RentManager from './components/RentManager';
 import UtilityManager from './components/UtilityManager';
 import MaintenanceManager from './components/MaintenanceManager';
-import VisitorParking from './components/VisitorParking';
-import SalesBooking from './components/SalesBooking';
 import Accounting from './components/Accounting';
 import EmployeeManager from './components/EmployeeManager';
 import Reports from './components/Reports';
-import AISmartFeatures from './components/AISmartFeatures';
 import SuperAdmin from './components/SuperAdmin';
 import TenantPortal from './components/TenantPortal';
 import AIChatSidebar from './components/AIChatSidebar';
@@ -79,20 +77,17 @@ export default function App() {
       { id: 'rentMgmt', label: t('rentMgmt'), icon: FileText },
       { id: 'utilityMgmt', label: t('utilityMgmt'), icon: Zap },
       { id: 'maintenanceMgmt', label: t('maintenanceMgmt'), icon: Wrench },
-      { id: 'visitorMgmt', label: t('visitorMgmt'), icon: ShieldCheck },
-      { id: 'salesBooking', label: t('salesBooking'), icon: BadgeDollarSign },
       { id: 'accountingSystem', label: t('accountingSystem'), icon: BookOpen },
       { id: 'employeeMgmt', label: t('employeeMgmt'), icon: Briefcase },
-      { id: 'reports', label: t('reports'), icon: FileSpreadsheet },
-      { id: 'aiSmart', label: t('aiSmartTitle'), icon: Brain }
+      { id: 'reports', label: t('reports'), icon: FileSpreadsheet }
     ];
 
     // Filter menus based on role
     if (activeRole === 'accountant') {
-      return items.filter(i => ['dashboard', 'rentMgmt', 'accountingSystem', 'reports', 'aiSmart'].includes(i.id));
+      return items.filter(i => ['dashboard', 'rentMgmt', 'accountingSystem', 'reports'].includes(i.id));
     }
     if (activeRole === 'collector') {
-      return items.filter(i => ['dashboard', 'rentMgmt', 'utilityMgmt', 'visitorMgmt'].includes(i.id));
+      return items.filter(i => ['dashboard', 'rentMgmt', 'utilityMgmt'].includes(i.id));
     }
     return items;
   };
@@ -112,18 +107,12 @@ export default function App() {
         return <UtilityManager companyId={activeCompanyId} />;
       case 'maintenanceMgmt':
         return <MaintenanceManager companyId={activeCompanyId} />;
-      case 'visitorMgmt':
-        return <VisitorParking companyId={activeCompanyId} />;
-      case 'salesBooking':
-        return <SalesBooking companyId={activeCompanyId} />;
       case 'accountingSystem':
         return <Accounting companyId={activeCompanyId} />;
       case 'employeeMgmt':
         return <EmployeeManager companyId={activeCompanyId} />;
       case 'reports':
         return <Reports companyId={activeCompanyId} />;
-      case 'aiSmart':
-        return <AISmartFeatures companyId={activeCompanyId} />;
       case 'superAdmin':
         return <SuperAdmin />;
       case 'tenantPortal':

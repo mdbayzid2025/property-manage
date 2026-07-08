@@ -135,10 +135,14 @@ export interface Employee {
   name: string;
   phone: string;
   role: string;
-  department: string;
+  department?: string;
   salary: number;
   joinDate: string;
-  attendanceDays: number;
+  attendanceDays?: number;
+  address?: string;
+  propertyId?: string;
+  status?: 'active' | 'former';
+  documents?: TenantDoc[];
 }
 
 export interface Booking {
@@ -314,8 +318,8 @@ const DEMO_PARKING: ParkingSpace[] = [
 ];
 
 const DEMO_EMPLOYEES: Employee[] = [
-  { id: 'e1', companyId: 'c1', name: 'মোঃ রফিকুল ইসলাম', phone: '01711-229988', role: 'ম্যানেজার', department: 'অপারেশন্স', salary: 35000, joinDate: '2024-01-01', attendanceDays: 26 },
-  { id: 'e2', companyId: 'c1', name: 'সোহেল রানা', phone: '01912-334455', role: 'কেয়ারটেকার ও গার্ড', department: 'নিরাপত্তা', salary: 16000, joinDate: '2025-03-10', attendanceDays: 30 }
+  { id: 'e1', companyId: 'c1', name: 'মোঃ রফিকুল ইসলাম', phone: '01711-229988', role: 'ম্যানেজার', department: 'অপারেশন্স', salary: 35000, joinDate: '2024-01-01', attendanceDays: 26, address: 'ধানমন্ডি, ঢাকা', status: 'active', propertyId: 'p1' },
+  { id: 'e2', companyId: 'c1', name: 'সোহেল রানা', phone: '01912-334455', role: 'কেয়ারটেকার ও গার্ড', department: 'নিরাপত্তা', salary: 16000, joinDate: '2025-03-10', attendanceDays: 30, address: 'উত্তরা, ঢাকা', status: 'active', propertyId: 'p1' }
 ];
 
 const DEMO_BOOKINGS: Booking[] = [

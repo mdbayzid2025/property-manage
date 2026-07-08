@@ -118,6 +118,10 @@ export default function Dashboard({ companyId }: { companyId: string }) {
                 <div className="absolute -top-10 bg-slate-800 text-white text-[9px] p-1.5 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-20 pointer-events-none shadow-lg whitespace-nowrap">
                   {lang === 'bn' ? 'আয়: ' : 'Income: '}৳{(d.val*1000).toLocaleString()}
                 </div>
+                {/* Bar Value Label */}
+                <span className="text-[9px] font-bold text-emerald-600 dark:text-emerald-400 mb-1 select-none">
+                  ৳{d.val}k
+                </span>
                 {/* Visual Bar */}
                 <div className="flex items-end h-36 w-8 bg-slate-100 dark:bg-slate-900/30 rounded-t-lg overflow-hidden">
                   <div 
@@ -166,6 +170,10 @@ export default function Dashboard({ companyId }: { companyId: string }) {
                 <div className="absolute -top-10 bg-slate-800 text-white text-[9px] p-1.5 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-20 pointer-events-none shadow-lg whitespace-nowrap">
                   {lang === 'bn' ? 'ব্যয়: ' : 'Expense: '}৳{(d.val*1000).toLocaleString()}
                 </div>
+                {/* Bar Value Label */}
+                <span className="text-[9px] font-bold text-rose-600 dark:text-rose-400 mb-1 select-none">
+                  ৳{d.val}k
+                </span>
                 {/* Visual Bar */}
                 <div className="flex items-end h-36 w-8 bg-slate-100 dark:bg-slate-900/30 rounded-t-lg overflow-hidden">
                   <div 
