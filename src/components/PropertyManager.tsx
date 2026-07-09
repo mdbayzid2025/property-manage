@@ -404,122 +404,152 @@ export default function PropertyManager({ companyId }: { companyId: string }) {
             </div>
 
             {showAddUnitForm && (
-              <form onSubmit={handleAddUnit} className="glass-panel rounded-2xl p-5 border border-slate-200 dark:border-blue-900/30 grid grid-cols-1 md:grid-cols-4 gap-4 animate-slide-in text-xs">
-                <div>
-                  <label className="text-[10px] text-slate-500 block mb-1">Unit Number/Name *</label>
-                  <input
-                    type="text"
-                    placeholder="e.g. Flat C1"
-                    value={newUnitNumber}
-                    onChange={(e) => setNewUnitNumber(e.target.value)}
-                    className="w-full p-2 bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-xl text-xs outline-none text-slate-800 dark:text-slate-200"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="text-[10px] text-slate-500 block mb-1">Floor *</label>
-                  <input
-                    type="number"
-                    value={newUnitFloor}
-                    onChange={(e) => setNewUnitFloor(Number(e.target.value))}
-                    className="w-full p-2 bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-xl text-xs outline-none text-slate-800 dark:text-slate-200"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="text-[10px] text-slate-500 block mb-1">Unit Type *</label>
-                  <select
-                    value={newUnitType}
-                    onChange={(e: any) => setNewUnitType(e.target.value)}
-                    className="w-full p-2.5 bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-xl text-xs outline-none text-slate-800 dark:text-slate-200 font-medium"
-                  >
-                    <option value="flat">Flat (বাসা)</option>
-                    <option value="shop">Shop (দোকান)</option>
-                    <option value="office">Office (অফিস)</option>
-                    <option value="parking">Plot / Parking (প্লট / পার্কিং)</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="text-[10px] text-slate-500 block mb-1">Size (Sqft) *</label>
-                  <input
-                    type="number"
-                    value={newUnitSize}
-                    onChange={(e) => setNewUnitSize(Number(e.target.value))}
-                    className="w-full p-2 bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-xl text-xs outline-none text-slate-800 dark:text-slate-200"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="text-[10px] text-slate-500 block mb-1">Monthly Rent *</label>
-                  <input
-                    type="number"
-                    value={newUnitRent}
-                    onChange={(e) => setNewUnitRent(Number(e.target.value))}
-                    className="w-full p-2 bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-xl text-xs outline-none text-slate-800 dark:text-slate-200"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="text-[10px] text-slate-500 block mb-1">Service Charge *</label>
-                  <input
-                    type="number"
-                    value={newUnitService}
-                    onChange={(e) => setNewUnitService(Number(e.target.value))}
-                    className="w-full p-2 bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-xl text-xs outline-none text-slate-800 dark:text-slate-200"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="text-[10px] text-slate-500 block mb-1">Security Deposit *</label>
-                  <input
-                    type="number"
-                    value={newUnitDeposit}
-                    onChange={(e) => setNewUnitDeposit(Number(e.target.value))}
-                    className="w-full p-2 bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-xl text-xs outline-none text-slate-800 dark:text-slate-200"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="text-[10px] text-slate-500 block mb-1">Meter Number</label>
-                  <input
-                    type="text"
-                    placeholder="e.g. E-882715"
-                    value={newUnitMeter}
-                    onChange={(e) => setNewUnitMeter(e.target.value)}
-                    className="w-full p-2 bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-xl text-xs outline-none text-slate-800 dark:text-slate-200"
-                  />
-                </div>
-                {newUnitType === 'flat' && (
-                  <>
-                    <div>
-                      <label className="text-[10px] text-slate-500 block mb-1">Bedrooms</label>
-                      <input
-                        type="number"
-                        value={newUnitBedrooms}
-                        onChange={(e) => setNewUnitBedrooms(Number(e.target.value))}
-                        className="w-full p-2 bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-xl text-xs outline-none text-slate-800 dark:text-slate-200"
-                      />
+              <div className="fixed inset-0 bg-slate-950/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 overflow-y-auto">
+                <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-850 rounded-3xl w-full max-w-2xl shadow-2xl overflow-hidden animate-slide-in my-8">
+                  {/* Header */}
+                  <div className="px-6 py-4 bg-slate-50 dark:bg-slate-900/60 border-b border-slate-200 dark:border-slate-850 flex justify-between items-center">
+                    <div className="flex items-center gap-3">
+                      <h3 className="text-base font-extrabold text-slate-900 dark:text-slate-100">
+                        নতুন ইউনিট যোগ করুন (Add New Unit)
+                      </h3>
                     </div>
-                    <div>
-                      <label className="text-[10px] text-slate-500 block mb-1">Bathrooms</label>
-                      <input
-                        type="number"
-                        value={newUnitBathrooms}
-                        onChange={(e) => setNewUnitBathrooms(Number(e.target.value))}
-                        className="w-full p-2 bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-xl text-xs outline-none text-slate-800 dark:text-slate-200"
-                      />
+                    <button
+                      type="button"
+                      onClick={() => setShowAddUnitForm(false)}
+                      className="p-1.5 hover:bg-slate-150 dark:hover:bg-slate-800 rounded-xl text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-all"
+                    >
+                      <X className="w-5 h-5" />
+                    </button>
+                  </div>
+
+                  {/* Form */}
+                  <form onSubmit={handleAddUnit} className="p-6 space-y-4 text-xs">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="text-[10px] text-slate-500 block mb-1">Unit Number/Name *</label>
+                        <input
+                          type="text"
+                          placeholder="e.g. Flat C1"
+                          value={newUnitNumber}
+                          onChange={(e) => setNewUnitNumber(e.target.value)}
+                          className="w-full p-2.5 bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-xl text-xs outline-none text-slate-800 dark:text-slate-200"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className="text-[10px] text-slate-500 block mb-1">Floor *</label>
+                        <input
+                          type="number"
+                          value={newUnitFloor}
+                          onChange={(e) => setNewUnitFloor(Number(e.target.value))}
+                          className="w-full p-2.5 bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-xl text-xs outline-none text-slate-800 dark:text-slate-200"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className="text-[10px] text-slate-500 block mb-1">Unit Type *</label>
+                        <select
+                          value={newUnitType}
+                          onChange={(e: any) => setNewUnitType(e.target.value)}
+                          className="w-full p-2.5 bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-xl text-xs outline-none text-slate-800 dark:text-slate-200 font-medium"
+                        >
+                          <option value="flat">Flat (বাসা)</option>
+                          <option value="shop">Shop (দোকান)</option>
+                          <option value="office">Office (অফিস)</option>
+                          <option value="parking">Plot / Parking (প্লট / পার্কিং)</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="text-[10px] text-slate-500 block mb-1">Size (Sqft) *</label>
+                        <input
+                          type="number"
+                          value={newUnitSize}
+                          onChange={(e) => setNewUnitSize(Number(e.target.value))}
+                          className="w-full p-2.5 bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-xl text-xs outline-none text-slate-800 dark:text-slate-200"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className="text-[10px] text-slate-500 block mb-1">Monthly Rent *</label>
+                        <input
+                          type="number"
+                          value={newUnitRent}
+                          onChange={(e) => setNewUnitRent(Number(e.target.value))}
+                          className="w-full p-2.5 bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-xl text-xs outline-none text-slate-800 dark:text-slate-200"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className="text-[10px] text-slate-500 block mb-1">Service Charge *</label>
+                        <input
+                          type="number"
+                          value={newUnitService}
+                          onChange={(e) => setNewUnitService(Number(e.target.value))}
+                          className="w-full p-2.5 bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-xl text-xs outline-none text-slate-800 dark:text-slate-200"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className="text-[10px] text-slate-500 block mb-1">Security Deposit *</label>
+                        <input
+                          type="number"
+                          value={newUnitDeposit}
+                          onChange={(e) => setNewUnitDeposit(Number(e.target.value))}
+                          className="w-full p-2.5 bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-xl text-xs outline-none text-slate-800 dark:text-slate-200"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className="text-[10px] text-slate-500 block mb-1">Meter Number</label>
+                        <input
+                          type="text"
+                          placeholder="e.g. E-882715"
+                          value={newUnitMeter}
+                          onChange={(e) => setNewUnitMeter(e.target.value)}
+                          className="w-full p-2.5 bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-xl text-xs outline-none text-slate-800 dark:text-slate-200"
+                        />
+                      </div>
+                      {newUnitType === 'flat' && (
+                        <>
+                          <div>
+                            <label className="text-[10px] text-slate-500 block mb-1">Bedrooms</label>
+                            <input
+                              type="number"
+                              value={newUnitBedrooms}
+                              onChange={(e) => setNewUnitBedrooms(Number(e.target.value))}
+                              className="w-full p-2.5 bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-xl text-xs outline-none text-slate-800 dark:text-slate-200"
+                            />
+                          </div>
+                          <div>
+                            <label className="text-[10px] text-slate-500 block mb-1">Bathrooms</label>
+                            <input
+                              type="number"
+                              value={newUnitBathrooms}
+                              onChange={(e) => setNewUnitBathrooms(Number(e.target.value))}
+                              className="w-full p-2.5 bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-xl text-xs outline-none text-slate-800 dark:text-slate-200"
+                            />
+                          </div>
+                        </>
+                      )}
                     </div>
-                  </>
-                )}
-                <div className="flex items-end md:col-span-2">
-                  <button
-                    type="submit"
-                    className="w-full py-2.5 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold rounded-xl text-xs shadow-md shadow-emerald-500/10"
-                  >
-                    Save Unit (ইউনিট সংরক্ষণ করুন)
-                  </button>
+                    <div className="flex justify-end gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">
+                      <button
+                        type="button"
+                        onClick={() => setShowAddUnitForm(false)}
+                        className="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-850 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 rounded-xl font-bold transition-all"
+                      >
+                        বাতিল (Cancel)
+                      </button>
+                      <button
+                        type="submit"
+                        className="px-5 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold rounded-xl shadow-md shadow-emerald-500/10 transition-all"
+                      >
+                        সংরক্ষণ করুন (Save)
+                      </button>
+                    </div>
+                  </form>
                 </div>
-              </form>
+              </div>
             )}
 
             {/* Interactive Grid */}

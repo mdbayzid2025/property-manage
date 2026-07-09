@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useTranslation } from '../services/translation';
 import { MockDB, Unit, Property, Tenant, Invoice } from '../services/db';
-import { Zap, Plus, Trash2, Calendar, User, ShieldCheck } from 'lucide-react';
+import { Zap, Plus, Trash2, Calendar, User, ShieldCheck, X } from 'lucide-react';
 
 export default function UtilityManager({ companyId }: { companyId: string }) {
   const { t, lang } = useTranslation();
@@ -229,7 +229,7 @@ export default function UtilityManager({ companyId }: { companyId: string }) {
     <div className="space-y-6 text-sm">
       
       {/* Header & Controls Panel */}
-      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 border-b border-slate-200 dark:border-blue-950/40 pb-4">
+      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 border-b border-slate-200 dark:border-blue-955/40 pb-4">
         <div className="flex items-center space-x-3">
           <div className="p-2 bg-sky-500/10 text-sky-400 rounded-lg">
             <Zap className="w-6 h-6 animate-pulse" />
@@ -276,221 +276,236 @@ export default function UtilityManager({ companyId }: { companyId: string }) {
         </div>
       </div>
 
-      {/* Record Utility Bill Form */}
+      {/* Record Utility Bill Form Modal */}
       {showAddForm && (
-        <form onSubmit={handleCreateBill} className="glass-panel rounded-3xl p-6 border border-slate-200 dark:border-blue-900/30 gap-6 grid grid-cols-1 md:grid-cols-3 animate-slide-in text-xs">
-          
-          <div className="md:col-span-3 pb-2 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center">
-            <h3 className="font-extrabold text-sm text-slate-800 dark:text-slate-100">নতুন ইউটিলিটি বিল তৈরি করুন</h3>
-            <span className="text-[10px] font-bold text-slate-400 flex items-center gap-1">
-              <Calendar className="w-3.5 h-3.5" /> Month: {billingMonth}
-            </span>
-          </div>
-
-          {/* Unit Selection */}
-          <div>
-            <label className="text-xs font-bold text-slate-600 dark:text-slate-455 block mb-1">ইউনিট নির্বাচন *</label>
-            <select
-              value={selectedUnitId}
-              onChange={(e) => setSelectedUnitId(e.target.value)}
-              className="w-full p-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-850 rounded-xl text-xs outline-none text-slate-800 dark:text-slate-350"
-              required
-            >
-              <option value="">-- Choose Unit --</option>
-              {propertyUnits.map(u => (
-                <option key={u.id} value={u.id}>{u.number} ({u.type.toUpperCase()})</option>
-              ))}
-            </select>
-          </div>
-
-          <div>
-            <label className="text-xs font-bold text-slate-600 dark:text-slate-455 block mb-1">বিলিং মাস</label>
-            <input 
-              type="text" 
-              value={billingMonth}
-              onChange={(e) => setBillingMonth(e.target.value)}
-              className="w-full p-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-850 rounded-xl text-xs outline-none text-slate-800 dark:text-slate-200"
-              required
-            />
-          </div>
-
-          <div className="md:col-span-1"></div>
-
-          {/* Real-time tenant info display */}
-          {activeTenant && (
-            <div className="md:col-span-3 p-3 bg-sky-500/5 border border-sky-500/10 rounded-2xl flex justify-between items-center text-xs animate-slide-in">
-              <div className="space-y-1">
-                <span className="text-[9px] uppercase font-extrabold text-sky-600 dark:text-sky-400 tracking-wider flex items-center gap-1">
-                  <User className="w-3 h-3" /> বর্তমান ভাড়াটিয়া তথ্য
-                </span>
-                <strong className="text-slate-800 dark:text-slate-200 text-sm">{activeTenant.name}</strong>
-                <p className="text-slate-500 text-[10px]">মোবাইল: {activeTenant.phone} • পেশা: {activeTenant.occupation || 'N/A'}</p>
+        <div className="fixed inset-0 bg-slate-955/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 overflow-y-auto">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-850 rounded-3xl w-full max-w-3xl shadow-2xl overflow-hidden animate-slide-in my-8">
+            {/* Header */}
+            <div className="px-6 py-4 bg-slate-50 dark:bg-slate-900/60 border-b border-slate-200 dark:border-slate-850 flex justify-between items-center">
+              <div className="flex items-center gap-3">
+                <h3 className="text-base font-extrabold text-slate-900 dark:text-slate-100">
+                  নতুন ইউটিলিটি বিল তৈরি করুন (Record Utility Bill)
+                </h3>
               </div>
-              <div className="text-right space-y-0.5">
-                <span className="text-[9px] text-slate-400 block uppercase font-bold tracking-wider">মাসিক ফ্ল্যাট ভাড়া</span>
-                <strong className="text-slate-800 dark:text-slate-200 text-sm">৳ {selectedUnit?.rentAmount.toLocaleString()}</strong>
-                <p className="text-slate-500 text-[10px]">সার্ভিস চার্জ: ৳ {selectedUnit?.serviceCharge.toLocaleString()}</p>
+              <button
+                type="button"
+                onClick={() => setShowAddForm(false)}
+                className="p-1.5 hover:bg-slate-150 dark:hover:bg-slate-800 rounded-xl text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-all"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Form */}
+            <form onSubmit={handleCreateBill} className="p-6 space-y-5 text-xs">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Unit Selection */}
+                <div>
+                  <label className="text-xs font-bold text-slate-600 dark:text-slate-455 block mb-1">ইউনিট নির্বাচন *</label>
+                  <select
+                    value={selectedUnitId}
+                    onChange={(e) => setSelectedUnitId(e.target.value)}
+                    className="w-full p-2.5 bg-slate-50 dark:bg-slate-95 border border-slate-200 dark:border-slate-850 rounded-xl text-xs outline-none text-slate-800 dark:text-slate-350"
+                    required
+                  >
+                    <option value="">-- Choose Unit --</option>
+                    {propertyUnits.map(u => (
+                      <option key={u.id} value={u.id}>{u.number} ({u.type.toUpperCase()})</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="text-xs font-bold text-slate-600 dark:text-slate-455 block mb-1">বিলিং মাস</label>
+                  <input 
+                    type="text" 
+                    value={billingMonth}
+                    onChange={(e) => setBillingMonth(e.target.value)}
+                    className="w-full p-2.5 bg-slate-50 dark:bg-slate-95 border border-slate-200 dark:border-slate-850 rounded-xl text-xs outline-none text-slate-800 dark:text-slate-200"
+                    required
+                  />
+                </div>
               </div>
-            </div>
-          )}
 
-          {/* Electricity section */}
-          <div className="p-4 bg-slate-50/50 dark:bg-slate-950/20 border border-slate-200 dark:border-slate-800/80 rounded-2xl space-y-3">
-            <span className="font-extrabold text-amber-500 uppercase tracking-wide block border-b border-slate-100 dark:border-slate-800/60 pb-1.5 font-bold">১. বিদ্যুৎ বিল (Electricity Meter)</span>
-            <div>
-              <label className="text-[10px] text-slate-550 block mb-1">পূর্ববর্তী রিডিং (Previous Reading)</label>
-              <input 
-                type="number" 
-                value={elecPrev}
-                onChange={(e) => setElecPrev(e.target.value)}
-                placeholder="e.g. 12450"
-                className="w-full p-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-xs outline-none text-slate-800 dark:text-slate-200"
-                required
-              />
-            </div>
-            <div>
-              <label className="text-[10px] text-slate-550 block mb-1">বর্তমান রিডিং (Current Reading)</label>
-              <input 
-                type="number" 
-                value={elecCurr}
-                onChange={(e) => setElecCurr(e.target.value)}
-                placeholder="e.g. 12790"
-                className="w-full p-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-xs outline-none text-slate-800 dark:text-slate-200"
-                required
-              />
-            </div>
-            <div>
-              <label className="text-[10px] text-slate-550 block mb-1">ইউনিট প্রতি মূল্য (৳ Rate per Unit)</label>
-              <input 
-                type="number" 
-                value={elecRate}
-                onChange={(e) => setElecRate(e.target.value)}
-                className="w-full p-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-xs outline-none text-slate-800 dark:text-slate-200"
-                required
-              />
-            </div>
-          </div>
+              {/* Real-time tenant info display */}
+              {activeTenant && (
+                <div className="p-3.5 bg-sky-500/5 border border-sky-500/10 rounded-2xl flex justify-between items-center text-xs animate-slide-in">
+                  <div className="space-y-1">
+                    <span className="text-[9px] uppercase font-extrabold text-sky-600 dark:text-sky-400 tracking-wider flex items-center gap-1">
+                      <User className="w-3 h-3" /> বর্তমান ভাড়াটিয়া তথ্য
+                    </span>
+                    <strong className="text-slate-800 dark:text-slate-200 text-sm">{activeTenant.name}</strong>
+                    <p className="text-slate-500 text-[10px]">মোবাইল: {activeTenant.phone} • পেশা: {activeTenant.occupation || 'N/A'}</p>
+                  </div>
+                  <div className="text-right space-y-0.5">
+                    <span className="text-[9px] text-slate-400 block uppercase font-bold tracking-wider">মাসিক ফ্ল্যাট ভাড়া</span>
+                    <strong className="text-slate-800 dark:text-slate-200 text-sm">৳ {selectedUnit?.rentAmount.toLocaleString()}</strong>
+                    <p className="text-slate-500 text-[10px]">সার্ভিস চার্জ: ৳ {selectedUnit?.serviceCharge.toLocaleString()}</p>
+                  </div>
+                </div>
+              )}
 
-          {/* Gas billing section */}
-          <div className="p-4 bg-slate-50/50 dark:bg-slate-950/20 border border-slate-200 dark:border-slate-800/80 rounded-2xl space-y-3">
-            <span className="font-extrabold text-sky-500 uppercase tracking-wide block border-b border-slate-100 dark:border-slate-800/60 pb-1.5 font-bold">২. গ্যাস বিল (Gas Billing)</span>
-            <div>
-              <label className="text-[10px] text-slate-550 block mb-1">গ্যাস বিলের ধরন</label>
-              <div className="flex gap-2">
-                <button
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {/* Electricity section */}
+                <div className="p-4 bg-slate-50/50 dark:bg-slate-95/20 border border-slate-200 dark:border-slate-800/80 rounded-2xl space-y-3">
+                  <span className="font-extrabold text-amber-500 uppercase tracking-wide block border-b border-slate-100 dark:border-slate-800/60 pb-1.5 font-bold">১. বিদ্যুৎ বিল (Electricity Meter)</span>
+                  <div>
+                    <label className="text-[10px] text-slate-550 block mb-1">পূর্ববর্তী রিডিং (Previous Reading)</label>
+                    <input 
+                      type="number" 
+                      value={elecPrev}
+                      onChange={(e) => setElecPrev(e.target.value)}
+                      placeholder="e.g. 12450"
+                      className="w-full p-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-xs outline-none text-slate-800 dark:text-slate-200"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[10px] text-slate-550 block mb-1">বর্তমান রিডিং (Current Reading)</label>
+                    <input 
+                      type="number" 
+                      value={elecCurr}
+                      onChange={(e) => setElecCurr(e.target.value)}
+                      placeholder="e.g. 12790"
+                      className="w-full p-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-xs outline-none text-slate-800 dark:text-slate-200"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[10px] text-slate-550 block mb-1">ইউনিট প্রতি মূল্য (৳ Rate per Unit)</label>
+                    <input 
+                      type="number" 
+                      value={elecRate}
+                      onChange={(e) => setElecRate(e.target.value)}
+                      className="w-full p-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-xs outline-none text-slate-800 dark:text-slate-200"
+                      required
+                    />
+                  </div>
+                </div>
+
+                {/* Gas billing section */}
+                <div className="p-4 bg-slate-50/50 dark:bg-slate-95/20 border border-slate-200 dark:border-slate-800/80 rounded-2xl space-y-3">
+                  <span className="font-extrabold text-sky-500 uppercase tracking-wide block border-b border-slate-100 dark:border-slate-800/60 pb-1.5 font-bold">২. গ্যাস বিল (Gas Billing)</span>
+                  <div>
+                    <label className="text-[10px] text-slate-550 block mb-1">গ্যাস বিলের ধরন</label>
+                    <div className="flex gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setGasType('fixed')}
+                        className={`w-1/2 p-2 rounded-xl text-[10px] font-bold border transition-all ${
+                          gasType === 'fixed' 
+                            ? 'border-sky-500 bg-sky-500/10 text-sky-600 dark:text-sky-400' 
+                            : 'border-slate-200 dark:border-slate-800 text-slate-500 bg-white dark:bg-slate-900'
+                        }`}
+                      >
+                        ফিক্সড রেট (Fixed)
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setGasType('measured')}
+                        className={`w-1/2 p-2 rounded-xl text-[10px] font-bold border transition-all ${
+                          gasType === 'measured' 
+                            ? 'border-sky-500 bg-sky-500/10 text-sky-600 dark:text-sky-400' 
+                            : 'border-slate-200 dark:border-slate-800 text-slate-500 bg-white dark:bg-slate-900'
+                        }`}
+                      >
+                        মিটার ইউনিট
+                      </button>
+                    </div>
+                  </div>
+
+                  {gasType === 'fixed' ? (
+                    <div>
+                      <label className="text-[10px] text-slate-550 block mb-1">গ্যাস বিলের পরিমাণ (৳ Fixed Rate)</label>
+                      <input 
+                        type="number" 
+                        value={gasFixed}
+                        onChange={(e) => setGasFixed(e.target.value)}
+                        className="w-full p-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-xs outline-none text-slate-800 dark:text-slate-200"
+                        required
+                      />
+                    </div>
+                  ) : (
+                    <div className="space-y-3 animate-slide-in">
+                      <div>
+                        <label className="text-[10px] text-slate-550 block mb-1">গ্যাস পূর্ববর্তী রিডিং</label>
+                        <input 
+                          type="number" 
+                          value={gasPrev}
+                          onChange={(e) => setGasPrev(e.target.value)}
+                          placeholder="e.g. 480"
+                          className="w-full p-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-xs outline-none text-slate-800 dark:text-slate-200"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className="text-[10px] text-slate-550 block mb-1">গ্যাস বর্তমান রিডিং</label>
+                        <input 
+                          type="number" 
+                          value={gasCurr}
+                          onChange={(e) => setGasCurr(e.target.value)}
+                          placeholder="e.g. 510"
+                          className="w-full p-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-xs outline-none text-slate-800 dark:text-slate-200"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className="text-[10px] text-slate-550 block mb-1">ইউনিট প্রতি মূল্য (৳ Rate per Unit)</label>
+                        <input 
+                          type="number" 
+                          value={gasRate}
+                          onChange={(e) => setGasRate(e.target.value)}
+                          className="w-full p-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-xs outline-none text-slate-800 dark:text-slate-200"
+                          required
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Garage & water section */}
+                <div className="p-4 bg-slate-50/50 dark:bg-slate-95/20 border border-slate-200 dark:border-slate-800/80 rounded-2xl space-y-3">
+                  <span className="font-extrabold text-purple-500 uppercase tracking-wide block border-b border-slate-100 dark:border-slate-800/60 pb-1.5 font-bold">৩. অন্যান্য বিল (Others)</span>
+                  <div>
+                    <label className="text-[10px] text-slate-550 block mb-1">গ্যারেজ / পার্কিং ফি (৳ Optional)</label>
+                    <input 
+                      type="number" 
+                      value={garageBill}
+                      onChange={(e) => setGarageBill(e.target.value)}
+                      className="w-full p-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-xs outline-none text-slate-800 dark:text-slate-200"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[10px] text-slate-550 block mb-1">পানি বিল (৳ Water Bill)</label>
+                    <input 
+                      type="number" 
+                      value={waterBill}
+                      onChange={(e) => setWaterBill(e.target.value)}
+                      className="w-full p-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-xs outline-none text-slate-800 dark:text-slate-200"
+                      required
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">
+                <button 
                   type="button"
-                  onClick={() => setGasType('fixed')}
-                  className={`w-1/2 p-2 rounded-xl text-[10px] font-bold border transition-all ${
-                    gasType === 'fixed' 
-                      ? 'border-sky-500 bg-sky-500/10 text-sky-600 dark:text-sky-400' 
-                      : 'border-slate-200 dark:border-slate-800 text-slate-500 bg-white dark:bg-slate-900'
-                  }`}
+                  onClick={() => setShowAddForm(false)}
+                  className="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-850 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 rounded-xl font-bold transition-all"
                 >
-                  ফিক্সড রেট (Fixed)
+                  বাতিল (Cancel)
                 </button>
-                <button
-                  type="button"
-                  onClick={() => setGasType('measured')}
-                  className={`w-1/2 p-2 rounded-xl text-[10px] font-bold border transition-all ${
-                    gasType === 'measured' 
-                      ? 'border-sky-500 bg-sky-500/10 text-sky-600 dark:text-sky-400' 
-                      : 'border-slate-200 dark:border-slate-800 text-slate-500 bg-white dark:bg-slate-900'
-                  }`}
+                <button 
+                  type="submit"
+                  className="px-5 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold rounded-xl shadow-md shadow-emerald-500/10 transition-all"
                 >
-                  মিটার ইউনিট
+                  বিল প্রস্তুত করুন (Process)
                 </button>
               </div>
-            </div>
-
-            {gasType === 'fixed' ? (
-              <div>
-                <label className="text-[10px] text-slate-550 block mb-1">গ্যাস বিলের পরিমাণ (৳ Fixed Rate)</label>
-                <input 
-                  type="number" 
-                  value={gasFixed}
-                  onChange={(e) => setGasFixed(e.target.value)}
-                  className="w-full p-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-xs outline-none text-slate-800 dark:text-slate-200"
-                  required
-                />
-              </div>
-            ) : (
-              <div className="space-y-3 animate-slide-in">
-                <div>
-                  <label className="text-[10px] text-slate-550 block mb-1">গ্যাস পূর্ববর্তী রিডিং</label>
-                  <input 
-                    type="number" 
-                    value={gasPrev}
-                    onChange={(e) => setGasPrev(e.target.value)}
-                    placeholder="e.g. 480"
-                    className="w-full p-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-xs outline-none text-slate-800 dark:text-slate-200"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="text-[10px] text-slate-550 block mb-1">গ্যাস বর্তমান রিডিং</label>
-                  <input 
-                    type="number" 
-                    value={gasCurr}
-                    onChange={(e) => setGasCurr(e.target.value)}
-                    placeholder="e.g. 510"
-                    className="w-full p-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-xs outline-none text-slate-800 dark:text-slate-200"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="text-[10px] text-slate-550 block mb-1">ইউনিট প্রতি মূল্য (৳ Rate per Unit)</label>
-                  <input 
-                    type="number" 
-                    value={gasRate}
-                    onChange={(e) => setGasRate(e.target.value)}
-                    className="w-full p-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-xs outline-none text-slate-800 dark:text-slate-200"
-                    required
-                  />
-                </div>
-              </div>
-            )}
+            </form>
           </div>
-
-          {/* Garage & water section */}
-          <div className="p-4 bg-slate-50/50 dark:bg-slate-950/20 border border-slate-200 dark:border-slate-800/80 rounded-2xl space-y-3">
-            <span className="font-extrabold text-purple-500 uppercase tracking-wide block border-b border-slate-100 dark:border-slate-800/60 pb-1.5 font-bold">৩. অন্যান্য বিল (Others)</span>
-            <div>
-              <label className="text-[10px] text-slate-550 block mb-1">গ্যারেজ / পার্কিং ফি (৳ Optional)</label>
-              <input 
-                type="number" 
-                value={garageBill}
-                onChange={(e) => setGarageBill(e.target.value)}
-                className="w-full p-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-xs outline-none text-slate-800 dark:text-slate-200"
-              />
-            </div>
-            <div>
-              <label className="text-[10px] text-slate-550 block mb-1">পানি বিল (৳ Water Bill)</label>
-              <input 
-                type="number" 
-                value={waterBill}
-                onChange={(e) => setWaterBill(e.target.value)}
-                className="w-full p-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-xs outline-none text-slate-800 dark:text-slate-200"
-                required
-              />
-            </div>
-          </div>
-
-          <div className="md:col-span-3 flex justify-end gap-2 border-t border-slate-100 dark:border-slate-800/80 pt-4">
-            <button 
-              type="button"
-              onClick={() => setShowAddForm(false)}
-              className="px-5 py-2.5 border border-slate-200 dark:border-slate-800 hover:bg-slate-100 text-slate-500 dark:text-slate-400 rounded-xl font-semibold text-xs"
-            >
-              Cancel
-            </button>
-            <button 
-              type="submit"
-              className="px-6 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold rounded-xl shadow-md shadow-emerald-500/10"
-            >
-              Process & Calculate Bill (বিল প্রস্তুত করুন)
-            </button>
-          </div>
-        </form>
+        </div>
       )}
 
       {/* Extended Utilities Table */}
@@ -503,11 +518,11 @@ export default function UtilityManager({ companyId }: { companyId: string }) {
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
             <thead>
-              <tr className="border-b border-slate-200 dark:border-blue-950/40 text-slate-450 dark:text-slate-500 uppercase tracking-wider text-[10px]">
+              <tr className="border-b border-slate-200 dark:border-blue-950/40 text-slate-455 dark:text-slate-500 uppercase tracking-wider text-[10px]">
                 <th className="py-3 font-bold">ফ্ল্যাট / ইউনিট</th>
                 <th className="py-3 font-bold">ভাড়াটিয়া</th>
                 <th className="py-3 font-bold">১. বিদ্যুৎ বিল (ইলেকট্রিসিটি)</th>
-                <th className="py-3 font-bold">২.ガス বিল (গ্যাস)</th>
+                <th className="py-3 font-bold">২. গ্যাস বিল (গ্যাস)</th>
                 <th className="py-3 font-bold">৩. পার্কিং / পানি</th>
                 <th className="py-3 font-bold">ইউটিলিটি মোট</th>
                 <th className="py-3 font-bold text-center">ভাড়ার সাথে সংযুক্ত চালান</th>
@@ -537,7 +552,7 @@ export default function UtilityManager({ companyId }: { companyId: string }) {
                   const isExtended = ut.electricityPrev !== undefined;
                   
                   return (
-                    <tr key={ut.id} className="hover:bg-slate-50/50 dark:hover:bg-blue-950/10">
+                    <tr key={ut.id} className="hover:bg-slate-50/50 dark:hover:bg-blue-955/10">
                       
                       {/* Unit number */}
                       <td className="py-3.5 font-bold text-slate-800 dark:text-slate-100">

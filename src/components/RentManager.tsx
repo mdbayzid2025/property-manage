@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useTranslation } from '../services/translation';
 import { MockDB, Invoice, Receipt, Tenant, Unit, AccountTransaction, Property } from '../services/db';
-import { FileText, Printer, Plus, Search, Check, ChevronDown, Landmark, Trash2 } from 'lucide-react';
+import { FileText, Printer, Plus, Search, Check, ChevronDown, Landmark, Trash2, X } from 'lucide-react';
 
 const BN_DIGITS = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
 function toBanglaNumerals(num: string | number): string {
@@ -183,7 +183,7 @@ export default function RentManager({ companyId }: { companyId: string }) {
         <div className="flex gap-2">
           <button
             onClick={() => setIsPrintingAll(true)}
-            className="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all"
+            className="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-880 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all"
           >
             <Printer className="w-4 h-4 text-sky-500" />
             {lang === 'bn' ? 'সকল বিল প্রিন্ট করুন' : 'Print All Receipts'}
@@ -199,72 +199,99 @@ export default function RentManager({ companyId }: { companyId: string }) {
         </div>
       </div>
 
-      {/* Manual Invoice Entry Form */}
+      {/* Manual Invoice Entry Form Modal */}
       {showAddForm && (
-        <form onSubmit={handleCreateInvoice} className="no-print glass-panel rounded-2xl p-5 border border-slate-200 dark:border-blue-900/30 grid grid-cols-1 md:grid-cols-4 gap-4 animate-slide-in">
-          <div>
-            <label className="text-xs text-slate-500 dark:text-slate-400 block mb-1">Select Tenant</label>
-            <select
-              value={tenantId}
-              onChange={(e) => handleTenantSelect(e.target.value)}
-              className="w-full p-2.5 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-blue-950/40 rounded-xl text-xs outline-none text-slate-800 dark:text-slate-350"
-              required
-            >
-              <option value="" className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100">-- Choose Active Tenant --</option>
-              {tenants.map(t => (
-                <option key={t.id} value={t.id} className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100">
-                  {t.name} ({units.find(u => u.id === t.unitId)?.number})
-                </option>
-              ))}
-            </select>
+        <div className="fixed inset-0 bg-slate-950/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 overflow-y-auto no-print">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-850 rounded-3xl w-full max-w-2xl shadow-2xl overflow-hidden animate-slide-in my-8">
+            {/* Header */}
+            <div className="px-6 py-4 bg-slate-50 dark:bg-slate-900/60 border-b border-slate-200 dark:border-slate-850 flex justify-between items-center">
+              <div className="flex items-center gap-3">
+                <h3 className="text-base font-extrabold text-slate-900 dark:text-slate-100">
+                  নতুন বিল যোগ করুন (Create Rent Invoice)
+                </h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowAddForm(false)}
+                className="p-1.5 hover:bg-slate-150 dark:hover:bg-slate-800 rounded-xl text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-all"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Form */}
+            <form onSubmit={handleCreateInvoice} className="p-6 space-y-4 text-xs">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-xs text-slate-500 dark:text-slate-400 block mb-1">Select Tenant *</label>
+                  <select
+                    value={tenantId}
+                    onChange={(e) => handleTenantSelect(e.target.value)}
+                    className="w-full p-2.5 bg-slate-50 dark:bg-slate-90/60 border border-slate-200 dark:border-slate-80 rounded-xl text-xs outline-none text-slate-800 dark:text-slate-350"
+                    required
+                  >
+                    <option value="" className="bg-white dark:bg-slate-900 text-slate-850 dark:text-slate-100">-- Choose Active Tenant --</option>
+                    {tenants.map(t => (
+                      <option key={t.id} value={t.id} className="bg-white dark:bg-slate-900 text-slate-855 dark:text-slate-100">
+                        {t.name} ({units.find(u => u.id === t.unitId)?.number})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="text-xs text-slate-500 dark:text-slate-400 block mb-1">Billing Month *</label>
+                  <input
+                    type="text"
+                    value={billingMonth}
+                    onChange={(e) => setBillingMonth(e.target.value)}
+                    className="w-full p-2.5 bg-slate-50 dark:bg-slate-90/60 border border-slate-200 dark:border-slate-80 rounded-xl text-xs outline-none text-slate-850 dark:text-slate-100"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="text-xs text-slate-500 block mb-1">Amount (BDT) *</label>
+                  <input
+                    type="number"
+                    placeholder="e.g. 25000"
+                    value={amount}
+                    onChange={(e) => setAmount(e.target.value)}
+                    className="w-full p-2.5 bg-slate-50 dark:bg-slate-90/60 border border-slate-200 dark:border-slate-80 rounded-xl text-xs outline-none text-slate-855 dark:text-slate-100"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="text-xs text-slate-500 block mb-1">Breakdown & Details</label>
+                  <input
+                    type="text"
+                    placeholder="ভাড়া: ২০০০০৳, সার্ভিস: ৩০০০৳"
+                    value={details}
+                    onChange={(e) => setDetails(e.target.value)}
+                    className="w-full p-2.5 bg-slate-50 dark:bg-slate-90/60 border border-slate-200 dark:border-slate-80 rounded-xl text-xs outline-none text-slate-855 dark:text-slate-100"
+                  />
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">
+                <button
+                  type="button"
+                  onClick={() => setShowAddForm(false)}
+                  className="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-850 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 rounded-xl font-bold transition-all"
+                >
+                  বাতিল (Cancel)
+                </button>
+                <button
+                  type="submit"
+                  className="px-5 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold rounded-xl shadow-md shadow-emerald-500/10 transition-all"
+                >
+                  চালান ইস্যু করুন (Issue Invoice)
+                </button>
+              </div>
+            </form>
           </div>
-          <div>
-            <label className="text-xs text-slate-500 dark:text-slate-400 block mb-1">Billing Month</label>
-            <input
-              type="text"
-              value={billingMonth}
-              onChange={(e) => setBillingMonth(e.target.value)}
-              className="w-full p-2.5 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-blue-950/40 rounded-xl text-xs outline-none text-slate-850 dark:text-slate-100"
-              required
-            />
-          </div>
-          <div>
-            <label className="text-xs text-slate-500 block mb-1">Amount (BDT)</label>
-            <input
-              type="number"
-              placeholder="e.g. 25000"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              className="w-full p-2.5 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-blue-950/40 rounded-xl text-xs outline-none text-slate-850 dark:text-slate-100"
-              required
-            />
-          </div>
-          <div>
-            <label className="text-xs text-slate-500 block mb-1">Breakdown & Details</label>
-            <input
-              type="text"
-              placeholder="ভাড়া: ২০০০০৳, সার্ভিস: ৩০০০৳"
-              value={details}
-              onChange={(e) => setDetails(e.target.value)}
-              className="w-full p-2.5 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-blue-950/40 rounded-xl text-xs outline-none text-slate-850 dark:text-slate-100"
-            />
-          </div>
-          <div className="md:col-span-4 flex justify-end gap-2">
-            <button
-              type="button"
-              onClick={() => setShowAddForm(false)}
-              className="px-4 py-2 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-500"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="px-5 py-2 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold rounded-xl text-xs shadow-md shadow-emerald-500/10"
-            >
-              Issue Invoice
-            </button>
-          </div>
-        </form>
+        </div>
       )}
 
       {/* Filter and Search Panel */}
@@ -276,7 +303,7 @@ export default function RentManager({ companyId }: { companyId: string }) {
             placeholder={lang === 'bn' ? 'ভাড়াটিয়ার নাম বা মোবাইল নম্বর দিয়ে সার্চ...' : 'Search by tenant name or mobile...'}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-blue-950/40 rounded-xl text-xs outline-none text-slate-800 dark:text-slate-200"
+            className="w-full pl-9 pr-4 py-2 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-blue-955/40 rounded-xl text-xs outline-none text-slate-800 dark:text-slate-200"
           />
         </div>
 
@@ -285,7 +312,7 @@ export default function RentManager({ companyId }: { companyId: string }) {
           <select
             value={selectedPropertyId}
             onChange={(e) => setSelectedPropertyId(e.target.value)}
-            className="p-2 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-blue-950/40 rounded-xl text-xs outline-none text-slate-850 dark:text-slate-200"
+            className="p-2 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-blue-955/40 rounded-xl text-xs outline-none text-slate-850 dark:text-slate-200"
           >
             <option value="">{lang === 'bn' ? 'সকল প্রোপার্টি' : 'All Properties'}</option>
             {properties.map(p => (
@@ -297,7 +324,7 @@ export default function RentManager({ companyId }: { companyId: string }) {
           <select
             value={selectedMonth}
             onChange={(e) => setSelectedMonth(e.target.value)}
-            className="p-2 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-blue-950/40 rounded-xl text-xs outline-none text-slate-850 dark:text-slate-200"
+            className="p-2 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-blue-955/40 rounded-xl text-xs outline-none text-slate-850 dark:text-slate-200"
           >
             {MONTH_OPTIONS.map(m => (
               <option key={m.en} value={m.en}>{lang === 'bn' ? m.bn : m.en}</option>
@@ -308,7 +335,7 @@ export default function RentManager({ companyId }: { companyId: string }) {
           <select
             value={selectedYear}
             onChange={(e) => setSelectedYear(e.target.value)}
-            className="p-2 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-blue-950/40 rounded-xl text-xs outline-none text-slate-850 dark:text-slate-200"
+            className="p-2 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-blue-955/40 rounded-xl text-xs outline-none text-slate-855 dark:text-slate-200"
           >
             <option value="2024">২০২৪</option>
             <option value="2025">২০২৫</option>
@@ -326,22 +353,22 @@ export default function RentManager({ companyId }: { companyId: string }) {
           </span>
         </div>
 
-        <div className="overflow-x-auto rounded-xl border border-slate-200 dark:border-blue-950/50">
+        <div className="overflow-x-auto rounded-xl border border-slate-200 dark:border-blue-955/50">
           <table className="w-full text-center border-collapse">
             <thead>
-              <tr className="bg-slate-50 dark:bg-blue-950/20 text-slate-500 dark:text-slate-300 font-bold border-b border-slate-200 dark:border-blue-950/60 text-xs">
-                <th className="py-3 px-2 border-r border-slate-200 dark:border-blue-950/40 w-12">ক্র. নং</th>
-                <th className="py-3 px-2 border-r border-slate-200 dark:border-blue-950/40 text-left">বিল্ডিং ও ফ্ল্যাট</th>
-                <th className="py-3 px-2 border-r border-slate-200 dark:border-blue-950/40 text-left">ভাড়াটিয়ার বিবরণ (নাম ও মোবাইল)</th>
-                <th className="py-3 px-2 border-r border-slate-200 dark:border-blue-950/40 text-left">মাসিক ভাড়া ও ইউটিলিটি বিবরণী</th>
-                <th className="py-3 px-2 border-r border-slate-200 dark:border-blue-950/40">বিলিং মাস</th>
-                <th className="py-3 px-2 border-r border-slate-200 dark:border-blue-950/40">আদায়কৃত টাকা</th>
-                <th className="py-3 px-2 border-r border-slate-200 dark:border-blue-950/40">বকেয়া টাকা</th>
-                <th className="py-3 px-2 border-r border-slate-200 dark:border-blue-950/40">স্ট্যাটাস</th>
+              <tr className="bg-slate-50 dark:bg-blue-955/20 text-slate-500 dark:text-slate-300 font-bold border-b border-slate-200 dark:border-blue-955/60 text-xs">
+                <th className="py-3 px-2 border-r border-slate-200 dark:border-blue-955/40 w-12">ক্র. নং</th>
+                <th className="py-3 px-2 border-r border-slate-200 dark:border-blue-955/40 text-left">বিল্ডিং ও ফ্ল্যাট</th>
+                <th className="py-3 px-2 border-r border-slate-200 dark:border-blue-955/40 text-left">ভাড়াটিয়ার বিবরণ (নাম ও মোবাইল)</th>
+                <th className="py-3 px-2 border-r border-slate-200 dark:border-blue-955/40 text-left">মাসিক ভাড়া ও ইউটিলিটি বিবরণী</th>
+                <th className="py-3 px-2 border-r border-slate-200 dark:border-blue-955/40">বিলিং মাস</th>
+                <th className="py-3 px-2 border-r border-slate-200 dark:border-blue-955/40">আদায়কৃত টাকা</th>
+                <th className="py-3 px-2 border-r border-slate-200 dark:border-blue-955/40">বকেয়া টাকা</th>
+                <th className="py-3 px-2 border-r border-slate-200 dark:border-blue-955/40">স্ট্যাটাস</th>
                 <th className="py-3 px-2 no-print">অ্যাকশন</th>
               </tr>
             </thead>
-            <tbody className="text-xs divide-y divide-slate-100 dark:divide-blue-950/20">
+            <tbody className="text-xs divide-y divide-slate-100 dark:divide-blue-955/20">
               {filteredInvoices.length === 0 ? (
                 <tr>
                   <td colSpan={9} className="py-8 text-center text-slate-400 font-medium italic">
@@ -356,32 +383,32 @@ export default function RentManager({ companyId }: { companyId: string }) {
                   const due = inv.amount - inv.paidAmount;
 
                   return (
-                    <tr key={inv.id} className="hover:bg-slate-50/50 dark:hover:bg-blue-950/10 text-slate-700 dark:text-slate-300">
-                      <td className="py-3 px-2 border-r border-slate-200 dark:border-blue-950/20 font-semibold">
+                    <tr key={inv.id} className="hover:bg-slate-50/50 dark:hover:bg-blue-955/10 text-slate-700 dark:text-slate-350">
+                      <td className="py-3 px-2 border-r border-slate-200 dark:border-blue-955/20 font-semibold">
                         {lang === 'bn' ? toBanglaNumerals(index + 1) : index + 1}
                       </td>
-                      <td className="py-3 px-2 border-r border-slate-200 dark:border-blue-950/20 text-left">
+                      <td className="py-3 px-2 border-r border-slate-200 dark:border-blue-955/20 text-left">
                         <span className="font-bold block text-slate-800 dark:text-slate-100">{property?.name.split(' (')[0]}</span>
                         <span className="text-[10px] text-slate-400 block">Flat: {unit?.number}</span>
                       </td>
-                      <td className="py-3 px-2 border-r border-slate-200 dark:border-blue-950/20 text-left">
+                      <td className="py-3 px-2 border-r border-slate-200 dark:border-blue-955/20 text-left">
                         <span className="font-bold block text-slate-900 dark:text-slate-100">{tenant?.name}</span>
                         <span className="text-[10px] text-slate-500 block">{tenant?.phone}</span>
                       </td>
-                      <td className="py-3 px-2 border-r border-slate-200 dark:border-blue-950/20 text-left">
+                      <td className="py-3 px-2 border-r border-slate-200 dark:border-blue-955/20 text-left">
                         <span className="font-bold text-slate-800 dark:text-slate-200">৳ {inv.amount.toLocaleString()}</span>
                         <span className="text-[10px] text-slate-400 block italic">{inv.details}</span>
                       </td>
-                      <td className="py-3 px-2 border-r border-slate-200 dark:border-blue-950/20 font-medium">
+                      <td className="py-3 px-2 border-r border-slate-200 dark:border-blue-955/20 font-medium">
                         {inv.billingMonth}
                       </td>
-                      <td className="py-3 px-2 border-r border-slate-200 dark:border-blue-950/20 font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-500/5">
+                      <td className="py-3 px-2 border-r border-slate-200 dark:border-blue-955/20 font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-500/5">
                         ৳ {inv.paidAmount.toLocaleString()}
                       </td>
-                      <td className="py-3 px-2 border-r border-slate-200 dark:border-blue-950/20 font-bold text-rose-500 bg-rose-500/5">
+                      <td className="py-3 px-2 border-r border-slate-200 dark:border-blue-955/20 font-bold text-rose-500 bg-rose-500/5">
                         ৳ {due.toLocaleString()}
                       </td>
-                      <td className="py-3 px-2 border-r border-slate-200 dark:border-blue-950/20">
+                      <td className="py-3 px-2 border-r border-slate-200 dark:border-blue-955/20">
                         <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
                           inv.status === 'paid' ? 'bg-emerald-500/10 text-emerald-400' :
                           inv.status === 'due' ? 'bg-rose-500/10 text-rose-400' : 'bg-amber-500/10 text-amber-400'
@@ -393,7 +420,7 @@ export default function RentManager({ companyId }: { companyId: string }) {
                         {inv.status !== 'paid' && (
                           <button
                             onClick={() => markAsPaidManually(inv)}
-                            className="px-2 py-1 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold rounded-lg text-[10px]"
+                            className="px-2 py-1 bg-emerald-500 hover:bg-emerald-600 text-slate-955 font-bold rounded-lg text-[10px]"
                           >
                             Mark Paid
                           </button>
@@ -419,17 +446,17 @@ export default function RentManager({ companyId }: { companyId: string }) {
               {/* Bottom Grand Totals Row */}
               {filteredInvoices.length > 0 && (
                 <tr className="bg-indigo-50/80 dark:bg-indigo-950/50 text-slate-900 dark:text-white font-extrabold text-xs border-t-2 border-b-2 border-indigo-200 dark:border-indigo-900/60 shadow-sm">
-                  <td colSpan={3} className="py-3.5 px-2 border-r border-slate-200 dark:border-blue-950/40 text-right">
+                  <td colSpan={3} className="py-3.5 px-2 border-r border-slate-200 dark:border-blue-955/40 text-right">
                     {lang === 'bn' ? 'সর্বমোট প্রদেয় ভাড়া এবং বকেয়া =' : 'Grand Total Dues & Collected ='}
                   </td>
-                  <td className="py-3.5 px-2 border-r border-slate-200 dark:border-blue-950/40 font-black text-sm text-indigo-600 dark:text-indigo-400">
+                  <td className="py-3.5 px-2 border-r border-slate-200 dark:border-blue-955/40 font-black text-sm text-indigo-600 dark:text-indigo-400">
                     ৳ {totalReceivable.toLocaleString()}
                   </td>
-                  <td className="py-3.5 px-2 border-r border-slate-200 dark:border-blue-950/40"></td>
-                  <td className="py-3.5 px-2 border-r border-slate-200 dark:border-blue-950/40 font-black text-emerald-600 bg-emerald-500/10 text-sm">
+                  <td className="py-3.5 px-2 border-r border-slate-200 dark:border-blue-955/40"></td>
+                  <td className="py-3.5 px-2 border-r border-slate-200 dark:border-blue-955/40 font-black text-emerald-600 bg-emerald-500/10 text-sm">
                     ৳ {totalCollected.toLocaleString()}
                   </td>
-                  <td className="py-3.5 px-2 border-r border-slate-200 dark:border-blue-950/40 font-black text-rose-500 bg-rose-500/10 text-sm">
+                  <td className="py-3.5 px-2 border-r border-slate-200 dark:border-blue-955/40 font-black text-rose-500 bg-rose-500/10 text-sm">
                     ৳ {totalDues.toLocaleString()}
                   </td>
                   <td colSpan={2} className="py-3.5 px-2"></td>
@@ -448,7 +475,7 @@ export default function RentManager({ companyId }: { companyId: string }) {
               <div className="flex gap-2">
                 <button
                   onClick={() => setPrintTemplate('a4')}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${printTemplate === 'a4' ? 'bg-sky-500 text-white' : 'text-slate-600'}`}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${printTemplate === 'a4' ? 'bg-sky-500 text-white' : 'text-slate-655'}`}
                 >
                   A4 Invoice Copy
                 </button>
@@ -456,7 +483,7 @@ export default function RentManager({ companyId }: { companyId: string }) {
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => window.print()}
-                  className="p-2 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold rounded-lg text-xs flex items-center gap-1"
+                  className="p-2 bg-emerald-500 hover:bg-emerald-600 text-slate-955 font-bold rounded-lg text-xs flex items-center gap-1"
                 >
                   <Printer className="w-4 h-4" />
                   Print Receipt
@@ -471,7 +498,7 @@ export default function RentManager({ companyId }: { companyId: string }) {
             </div>
 
             {/* Print Area Preview */}
-            <div className="flex-1 overflow-y-auto p-8 bg-white text-slate-950 font-sans print-area">
+            <div className="flex-1 overflow-y-auto p-8 bg-white text-slate-950 print-area">
               <div className="space-y-8 max-w-2xl mx-auto">
                 <div className="flex justify-between items-start">
                   <div>
@@ -489,16 +516,16 @@ export default function RentManager({ companyId }: { companyId: string }) {
 
                 <div className="grid grid-cols-2 gap-4 text-xs">
                   <div>
-                    <span className="text-slate-400 block uppercase">ভাড়াটিয়ার বিবরণ (Tenant Details):</span>
+                    <span className="text-slate-400 block uppercase font-bold">ভাড়াটিয়ার বিবরণ (Tenant Details):</span>
                     <p className="font-bold text-slate-800 mt-1">{tenants.find(t => t.id === activeInvoice.tenantId)?.name}</p>
-                    <p className="text-slate-600">Unit: {units.find(u => u.id === activeInvoice.unitId)?.number}</p>
-                    <p className="text-slate-600">Phone: {tenants.find(t => t.id === activeInvoice.tenantId)?.phone}</p>
+                    <p className="text-slate-650">Unit: {units.find(u => u.id === activeInvoice.unitId)?.number}</p>
+                    <p className="text-slate-655">Phone: {tenants.find(t => t.id === activeInvoice.tenantId)?.phone}</p>
                   </div>
                   <div className="text-right">
-                    <span className="text-slate-400 block uppercase">পেমেন্ট স্ট্যাটাস (Status):</span>
+                    <span className="text-slate-400 block uppercase font-bold">পেমেন্ট স্ট্যাটাস (Status):</span>
                     <p className="font-bold text-emerald-600 mt-1 uppercase text-sm">{activeInvoice.status}</p>
-                    <p className="text-slate-600">পরিশোধের মাধ্যম: {activeInvoice.paymentMethod || 'Cash'}</p>
-                    <p className="text-slate-600">তারিখ: {activeInvoice.paymentDate || 'N/A'}</p>
+                    <p className="text-slate-650">পরিশোধের মাধ্যম: {activeInvoice.paymentMethod || 'Cash'}</p>
+                    <p className="text-slate-655">তারিখ: {activeInvoice.paymentDate || 'N/A'}</p>
                   </div>
                 </div>
 
@@ -545,7 +572,7 @@ export default function RentManager({ companyId }: { companyId: string }) {
               <div className="flex gap-2">
                 <button
                   onClick={() => window.print()}
-                  className="px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold rounded-xl text-xs flex items-center gap-1.5"
+                  className="px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-slate-955 font-bold rounded-xl text-xs flex items-center gap-1.5"
                 >
                   <Printer className="w-4 h-4" />
                   প্রিন্ট করুন
@@ -584,13 +611,13 @@ export default function RentManager({ companyId }: { companyId: string }) {
                       <div>
                         <span className="text-slate-400 block uppercase font-bold text-[9px]">ভাড়াটিয়া (Tenant):</span>
                         <p className="font-bold text-slate-800 text-xs mt-0.5">{tenant?.name}</p>
-                        <p className="text-slate-600 text-[10px]">ফ্ল্যাট/ইউনিট: {unit?.number}</p>
-                        <p className="text-slate-600 text-[10px]">মোবাইল: {tenant?.phone}</p>
+                        <p className="text-slate-655 text-[10px]">ফ্ল্যাট/ইউনিট: {unit?.number}</p>
+                        <p className="text-slate-655 text-[10px]">মোবাইল: {tenant?.phone}</p>
                       </div>
                       <div className="text-right">
                         <span className="text-slate-400 block uppercase font-bold text-[9px]">বিলিং স্ট্যাটাস (Status):</span>
                         <p className="font-extrabold text-rose-600 mt-0.5 uppercase text-xs">{inv.status}</p>
-                        <p className="text-slate-600 text-[10px]">প্রদেয় শেষ তারিখ: {inv.dueDate}</p>
+                        <p className="text-slate-655 text-[10px]">প্রদেয় শেষ তারিখ: {inv.dueDate}</p>
                       </div>
                     </div>
 
