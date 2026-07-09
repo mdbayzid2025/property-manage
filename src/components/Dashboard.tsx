@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from '../services/translation';
-import { MockDB, Invoice, AccountTransaction } from '../services/db';
+import { MockDB, Invoice, AccountTransaction, Tenant, Property, Unit } from '../services/db';
 import {
   TrendingUp, TrendingDown, AlertCircle,
   FileText

@@ -829,11 +829,11 @@ export default function PropertyManager({ companyId }: { companyId: string }) {
                               <label className="w-full py-4 border border-dashed border-slate-300 dark:border-slate-800 hover:border-sky-500 dark:hover:border-sky-500 bg-slate-50/50 dark:bg-slate-950/10 rounded-2xl flex flex-col items-center justify-center gap-1.5 cursor-pointer transition-all hover:bg-slate-100/50">
                                 <Upload className="w-5 h-5 text-slate-400" />
                                 <span className="text-[10px] font-bold text-slate-600 dark:text-slate-400">ডকুমেন্ট / ছবি আপলোড করুন</span>
-                                <input 
-                                  type="file" 
-                                  multiple 
-                                  accept="image/*,application/pdf" 
-                                  className="hidden" 
+                                <input
+                                  type="file"
+                                  multiple
+                                  accept="image/*,application/pdf"
+                                  className="hidden"
                                   onChange={(e) => {
                                     if (!e.target.files) return;
                                     const filesArray = Array.from(e.target.files);
@@ -859,8 +859,8 @@ export default function PropertyManager({ companyId }: { companyId: string }) {
                                   {newTenantDocs.map((doc, idx) => (
                                     <div key={idx} className="p-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-850 rounded-xl flex justify-between items-center text-[10px] gap-1.5">
                                       <span className="font-semibold text-slate-600 dark:text-slate-350 truncate flex-1">{doc.name}</span>
-                                      <button 
-                                        type="button" 
+                                      <button
+                                        type="button"
                                         onClick={() => setNewTenantDocs(prev => prev.filter((_, i) => i !== idx))}
                                         className="p-1 hover:bg-rose-500/10 text-rose-500 rounded transition-colors"
                                       >
@@ -993,10 +993,10 @@ export default function PropertyManager({ companyId }: { companyId: string }) {
             <div className="flex-1 flex justify-center py-4 overflow-y-auto max-h-[60vh] w-full">
               {viewingSelectedDoc.previewUrl && viewingSelectedDoc.type.startsWith('image/') ? (
                 <div className="flex flex-col items-center justify-center p-2 bg-slate-50 dark:bg-slate-950/20 border border-slate-200 dark:border-slate-800/80 rounded-3xl max-w-lg w-full">
-                  <img 
-                    src={viewingSelectedDoc.previewUrl} 
-                    alt={viewingSelectedDoc.name} 
-                    className="max-w-full max-h-[48vh] object-contain rounded-2xl shadow-md border border-slate-200/50" 
+                  <img
+                    src={viewingSelectedDoc.previewUrl}
+                    alt={viewingSelectedDoc.name}
+                    className="max-w-full max-h-[48vh] object-contain rounded-2xl shadow-md border border-slate-200/50"
                   />
                   <span className="text-[10px] text-slate-400 mt-2 font-bold">{viewingSelectedDoc.name} ({viewingSelectedDoc.size})</span>
                 </div>
@@ -1059,7 +1059,7 @@ export default function PropertyManager({ companyId }: { companyId: string }) {
                     <div className="space-y-2 text-[8px] flex-1">
                       <div className="border-b border-emerald-500/20 pb-1">
                         <span className="font-bold text-emerald-800 dark:text-emerald-450 text-[7px] block uppercase">Address / ঠিকানা:</span>
-                        <p className="text-slate-700 dark:text-slate-200 font-semibold">{selectedProperty.address}, ডাকঘর: ধানমন্ডি - ১২০৯, ঢাকা মেট্রোপলিটন</p>
+                        <p className="text-slate-700 dark:text-slate-200 font-semibold">{selectedProperty?.address}, ডাকঘর: ধানমন্ডি - ১২০৯, ঢাকা মেট্রোপলিটন</p>
                       </div>
                       <div className="flex justify-between gap-2">
                         <div>
@@ -1117,21 +1117,21 @@ export default function PropertyManager({ companyId }: { companyId: string }) {
                       <strong>২য় পক্ষ (ভাড়াটিয়া):</strong> {viewingDocTenant.name}, মোবাইল: {viewingDocTenant.phone}.
                     </p>
                     <p>
-                      উভয় পক্ষ স্বেচ্ছায় রাজী হইয়া অত্র ফ্ল্যাট/ইউনিট <strong>{selectedUnitDetails.number}</strong> ভাড়ার নিম্নোক্ত চুক্তিনামায় স্বাক্ষর করিলেন:
+                      উভয় পক্ষ স্বেচ্ছায় রাজী হইয়া অত্র ফ্ল্যাট/ইউনিট <strong>{selectedUnitDetails?.number}</strong> ভাড়ার নিম্নোক্ত চুক্তিনামায় স্বাক্ষর করিলেন:
                     </p>
 
                     <div className="p-3 bg-white dark:bg-slate-950/20 border border-slate-200 dark:border-slate-800 rounded-xl space-y-1.5 font-bold text-slate-700 dark:text-slate-350">
                       <div className="flex justify-between">
                         <span>১. ফ্ল্যাট নম্বর:</span>
-                        <span className="text-sky-600 dark:text-sky-400">{selectedUnitDetails.number}</span>
+                        <span className="text-sky-600 dark:text-sky-400">{selectedUnitDetails?.number}</span>
                       </div>
                       <div className="flex justify-between">
                         <span>২. মাসিক ভাড়া:</span>
-                        <span>৳ {selectedUnitDetails.rentAmount.toLocaleString()} / মাস</span>
+                        <span>৳ {selectedUnitDetails?.rentAmount.toLocaleString()} / মাস</span>
                       </div>
                       <div className="flex justify-between">
                         <span>৩. জামানত (Deposit):</span>
-                        <span>৳ {selectedUnitDetails.securityDeposit.toLocaleString()}</span>
+                        <span>৳ {selectedUnitDetails?.securityDeposit.toLocaleString()}</span>
                       </div>
                       <div className="flex justify-between">
                         <span>৪. চুক্তির শুরুর তারিখ:</span>
